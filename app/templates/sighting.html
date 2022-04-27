@@ -1,0 +1,75 @@
+<html class="chrome" lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" type="text/css" href="./static/styles.css">
+<body class="theme-black" style="background-color: #31373e;">
+{% if context.status in [None, ''] %}
+
+<div class="row" style="text-align: -webkit-center;">
+
+</div>
+{% elif context.status.startswith("Sighting created")%}
+<div class="row" style="text-align: -webkit-center;">
+       <h3 class="success-msg" >{{context.status}}</h3>
+</div>
+{% else %}
+     <div class="row" style="text-align: -webkit-center;">
+       <h3 class="error-msg" >{{context.status}}</h3>
+</div>
+{% endif %}
+<form action="./create_sighting" method="POST" class="config" id="configure-form">
+<h1>Create EclecticIQ Platform sighting </h1>
+ <div class="logoContainer">
+<img class="logo" src="static/images/EiqLogo.png" alt="Zscalar logo" width="200" height="50">
+</div>
+<hr class="formSeperator">
+
+<dl class="formContainer" style="color: white;padding: 20px;">
+   <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}"/>
+   <dt>Sighting value *</dt>
+   <dd><input class="textinput" type="text" size="50" id="sighting_value" placeholder="Sighting value" name="sighting_value" form="configure-form" autocomplete="off" value="{{ context.value }}" required></dd>
+   <br />
+     <div class="col-lg-2 col-md-2 col-sm-6 col-xs-9">
+   <label style="color: black;">Sighting type*
+   <select class="form-control" form="configure-form" name="sighting_type" id="sighting_type">
+       <option value="ipv4" {% if context.type == "ipv4" %} selected {% endif %}>ipv4</option>
+       <option {% if context.type == "domain" %} selected {% endif %}>domain</option>
+       <option {% if context.type == "uri" %} selected {% endif %}>uri</option>
+       <option {% if context.type == "email" %} selected {% endif %}>email</option>
+       <option {% if context.type == "hash-md5" %} selected {% endif %}>hash-md5</option>
+   </select>
+   </label>
+</div>
+<br />
+   <dt>Sighting title *</dt>
+   <dd><input class="textinput" type="text" size="50" id="sighting_title" placeholder="Sighting title" name="sighting_title" form="configure-form" autocomplete="off" value="Sighting of {{ context.value }}" required></dd>
+   <br />
+   <label>Sighting Description *
+   <input class="description" type="text" size="50" id="sighting_description" placeholder="Sighting Description" name="sighting_description" form="configure-form" autocomplete="off" value="Qradar created Sighting." required>
+
+   </label><br />
+   <br />
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-9">
+   <label style="color: black;">Sighting Confidence*
+   <select class="form-control" name="confidence_Level" id="confidence_Level">
+            <option value="high" >High</option>
+            <option value="medium" selected="selected">Medium</option>
+            <option value="low">Low</option>
+            <option value="unknown">Unknown</option>
+   </select>
+   </label>
+</div>
+<br />
+    <dt>Sighting tags delimted by comma</dt>
+   <dd><input class="textinput" type="text" size="50" id="sighting_tags" placeholder="Qradar sighting, Manually generated" name="sighting_tags" form="configure-form" autocomplete="off" value="Qradar sighting, Manually generated" ></dd>
+   <br />
+   <dd class="sumbitButton">
+       <button formmethod="POST" id="save_indicator_button" class="tc_dialog_button tc_save" type="submit"
+              value="Save" form="configure-form" >Create Sighting</button>
+   </dd>
+</dl>
+<p style="color:#3594D2;">{{ message }}</p>
+</form>
+</body>
+</html>
