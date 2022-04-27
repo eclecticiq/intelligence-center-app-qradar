@@ -1,4 +1,4 @@
-EclecticIQ Intelligence Center App for QRadar
+# EclecticIQ Intelligence Center App for QRadar
 
 # 1. Introduction
 
@@ -26,15 +26,15 @@ TODO
 
 #### Step 2. Navigate to QRadar App and select extension management
 
-![Navigate to QRadar App and select extension management](/assets/install-qradar-select-management.png)
+![Navigate to QRadar App and select extension management](/docs/assets/install-qradar-select-management.png)
 
 #### Step 3. Browse the file and install the application
 
-![Browse the file and install the application](/assets/install-qradar-the-application.png)
+![Browse the file and install the application](/docs/assets/install-qradar-the-application.png)
 
 #### Step 4. App should be installed successfully
 
-![Browse the file and install the application](/assets/install-qradar-success.png)
+![Browse the file and install the application](/docs/assets/install-qradar-success.png)
 
 # 2. Setup
 
@@ -47,11 +47,11 @@ After the installation, the user will have to provide details below in the setup
 * API key (Required)
 * QRadar Security token (Required)
 
-![Setup success](/assets/setup-success.png)
+![Setup success](/docs/assets/setup-success.png)
 
 Once the connection is successful, the user will have to click on the “Save” button to save the configuration.
 
-![Save setup](/assets/setup-save.png)
+![Save setup](/docs/assets/setup-save.png)
 
 ### 2.2 Configuration of the Observables and Ingest Data
 
@@ -63,11 +63,11 @@ After saving the credentials, the user will have to enter the below details and 
 * Select the observable types to ingest. (Required)
 * Select the interval to collect the observables. (Required)
 
-![Setup feeds](/assets/setup-feeds.png)
+![Setup feeds](/docs/assets/setup-feeds.png)
 
 Setup page will show a message that shows the last poll date for Observable ingestion.
 
-![Setup feeds](/assets/setup-feeds-2.png)
+![Setup feeds](/docs/assets/setup-feeds-2.png)
 
 Note: 
 
@@ -86,23 +86,23 @@ Reference table-2 should collect data of Poll Taxi stand in the Ip type
 
 Initially there should be no reference table when the API is triggered
 
-![Postman reference example](/assets/reference-table-postman-ex-1.png)
+![Postman reference example](/docs/assets/reference-table-postman-ex-1.png)
 
 The reference tables should be created when the configuration is saved and the API should be triggered with 200 status codes.
 
-![Postman reference example](/assets/reference-table-postman-ex-2.png)
+![Postman reference example](/docs/assets/reference-table-postman-ex-2.png)
 
-![Reference table logs](/assets/reference-table-logs.png)
+![Reference table logs](/docs/assets/reference-table-logs.png)
 
 To Verify the data in the reference table
 
-![Verify the data in the reference table](/assets/reference-table-verify.png)
+![Verify the data in the reference table](/docs/assets/reference-table-verify.png)
 
 # 5. Sighting Creation
 
 Step 1. Navigate to the Log activity tab in the QRADAR and right click on the source ip/ destination ip.
 
-![Sighting creation](/assets/sighting-creation-manual.png)
+![Sighting creation](/docs/assets/sighting-creation-manual.png)
 
 Step2:- A pop-up window will appear to ask for the details below. 
 
@@ -115,31 +115,31 @@ Clicking on save will create sightings in the EIQ platform with provided details
 * Sighting confidence: Confidence of sighting. Possible values: low, medium, high
 * Sighting tags delimited by a comma: Any tags to attach with sighting
 
-![Sighting creation detail](/assets/sighting-creation-detail.png)
+![Sighting creation detail](/docs/assets/sighting-creation-detail.png)
 
-![Sighting creation success](/assets/sighting-creation-success.png)
+![Sighting creation success](/docs/assets/sighting-creation-success.png)
 
 Step 3:- Verify the sighting in the EIQ application
 
-![Sighting creation verify](/assets/sighting-creation-verify.png)
+![Sighting creation verify](/docs/assets/sighting-creation-verify.png)
 
 # 6. Lookup (observable Table and creation of sighting)
 
 Step1:- Navigate to the Log activity tab in the QRADAR and right click on the source ip/ destination ip.
 
-![Log activity](/assets/lookup-1.png)
+![Log activity](/docs/assets/lookup-1.png)
 
 Step2:- A pop-up window will appear 
 
-![Lookup popup](/assets/lookup-2.png)
+![Lookup popup](/docs/assets/lookup-2.png)
 
 Step 3:-Click on create sighting button and verify the success message
 
-![Lookup success](/assets/lookup-3.png)
+![Lookup success](/docs/assets/lookup-3.png)
 
 Step 4:- Verify the sighting in the EIQ application
 
-![Lookup verify](/assets/lookup-4.png)
+![Lookup verify](/docs/assets/lookup-4.png)
 
 # 7. Custom Sighting Creation 
 
@@ -162,11 +162,13 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	* Select Action related to the data type of the rule created. For example if a rule is created for matching Destination IP select custom action as eiq_sighting_d_ip. 
 7. Click Finish.
 
-![](/assets/)
+![](/docs/assets/sighting-1.png)
 
-![](/assets/)
+![](/docs/assets/sighting-2.png)
 
-![](/assets/)
+![](/docs/assets/sighting-3.png)
+
+![](/docs/assets/sighting-4.png)
 
 # 8. Deletion of data 
 
@@ -174,13 +176,13 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 
 Deletion of observables will be performed when the user clicks the button to delete the data in the setup page. While the user will click on this option, the app will make an API call to Delete reference tables of Qradar and all tables created for that feed will be deleted along with the schema. Once deleted recovery will not be possible
 
-![](/assets/)
+![](/docs/assets/delete-1.png)
 
 ## Auto deletion of the data
 
 In the configuration screen, users will be able to select the retention period from the field “Select observable time to live”. One scheduled script will be running in the backend every day to remove the data which was updated before the retention period. 
 
-![](/assets/)
+![](/docs/assets/delete-2.png)
 
 # 9. Dashboard
 
@@ -190,7 +192,7 @@ Once the sighting is created from Qradar either by custom rule or manually by th
 2. Sighting by Confidence (bar chart) 
 3. Sighting by type count (bar chart) 
 
-![](/assets/)
+![](/docs/assets/dashboard.png)
 
 10. Tips & Tricks
 
