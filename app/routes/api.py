@@ -470,14 +470,14 @@ def store_sighting():
 def eiq_lookup_obs_func():
     """Send App ID and value to template."""
     context = request.args.get(CONTEXT)
-    return json.dumps({APP_ID: qpylib.get_app_id(), "search_value": context})
+    return jsonify({APP_ID: qpylib.get_app_id(), "search_value": context})
 
 
 @eiq.route("/eiqCreateSighting_func", methods=["GET"])
 def eiq_create_sighting_func():
     """Send App ID and value to template."""
     context = request.args.get(CONTEXT)
-    return json.dumps({APP_ID: qpylib.get_app_id(), "sightings_value": context})
+    return jsonify({APP_ID: qpylib.get_app_id(), "sightings_value": context})
 
 
 @eiq.route("/dashboard", methods=["GET"])

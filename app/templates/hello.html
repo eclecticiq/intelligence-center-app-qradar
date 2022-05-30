@@ -4,7 +4,7 @@
      <div class="row" style="text-align: -webkit-center;">
 
      </div>
-     {% elif context.status=="Test Connection Successfull ."%}
+     {% elif context.status=="Test Connection Successful."%}
      <div class="row" style="text-align: -webkit-center;">
             <h3 class="success-msg" >{{context.status}}</h3>
      </div>
@@ -28,7 +28,7 @@
     <hr class="formSeperator">
 
     <dl class="formContainer" style="color: white;padding: 20px;">
-        {% if context.status=="Test Connection Successfull ."%}
+        {% if context.status=="Test Connection Successful."%}
             <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}"/>
             <dt>Name <span>* </span></dt>
             <dd><input class="textinput" value="{{context.auth_user}}" type="text" size="50" id="name" placeholder="Name " name="name" form="configure-form" autocomplete="off" required readonly></dd>
@@ -96,7 +96,7 @@
         $("#configure-form").submit(function (){
                     $("#loading").show();
                 })
-            {% if context.status!="Test Connection Successfull ."%}
+            {% if context.status!="Test Connection Successful."%}
             $(document).ready(function()
             {
                 $(function(){

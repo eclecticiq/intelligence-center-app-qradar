@@ -102,7 +102,7 @@ class EclecticIQAPI:
     """EclecticIQ API."""
 
     def __init__(self, baseurl, eiq_version, api_key):
-        self.verify_ssl = True
+        self.verify_ssl = VERIFY
         self.baseurl = baseurl
         self.eiq_version = eiq_version
         self.headers = {
@@ -246,7 +246,7 @@ class QradarAPI:
     """Qradar APIs."""
 
     def __init__(self, baseurl, sec_token, app_id):
-        self.verify_ssl = False
+        self.verify_ssl = VERIFY
         self.baseurl = baseurl
         self.app_id = app_id
         self.headers = {
