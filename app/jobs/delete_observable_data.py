@@ -107,7 +107,7 @@ def get_reference_data_tables(sec_token):
     qpylib.log(REFERENCE_DATA_TABLES, level=LOG_LEVEL_INFO)
 
     headers = {HEADERS: {SEC_KEY: sec_token}}
-    console_address = qpylib.get_console_address()
+    console_address = qpylib.get_console_fqdn()
     url = HTTPS + str(console_address)
 
     qpylib.log(URL_MSG.format(url))
@@ -153,7 +153,7 @@ def delete_observable(table_name, observable_outer_key, observable_data, sec_tok
     """
     return_value = True
     headers = {HEADERS: {SEC_KEY: sec_token}}
-    console_address = qpylib.get_console_address()
+    console_address = qpylib.get_console_fqdn()
     url = HTTPS + str(console_address)
 
     request = CustomAuth.get_qradar_request(url)
@@ -311,7 +311,7 @@ def fetch_observable_data_table(table_names, sec_token, observable_ttl):
     """
     qpylib.log(DELETE_FETCH_DATA, level=LOG_LEVEL_INFO)
 
-    console_address = qpylib.get_console_address()
+    console_address = qpylib.get_console_fqdn()
     url = HTTPS + str(console_address)
 
     qpylib.log(URL_MSG.format(url))

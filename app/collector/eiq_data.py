@@ -988,7 +988,7 @@ class QradarApi:
         """
         qpylib.log(GET_REFERENCE_TABLE, level=LOG_LEVEL_INFO)
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
 
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
@@ -1058,7 +1058,7 @@ class QradarApi:
 
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
 
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
 
         for observable_type in observable_types:
             for outgoing_feed in outgoing_feeds:
@@ -1151,7 +1151,7 @@ class QradarApi:
         qpylib.log(URL_MSG.format(endpoint), level=LOG_LEVEL_INFO)
         jsn_str = json.dumps(data_to_load)
 
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
 
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
@@ -1205,7 +1205,7 @@ class QradarApi:
             level=LOG_LEVEL_INFO,
         )
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
 
         url = HTTPS + str(console_address)
 
@@ -1252,7 +1252,7 @@ class QradarApi:
         qpylib.log(IN_DELETE, level=LOG_LEVEL_INFO)
 
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
 
         for table_name in table_names:
             qpylib.log(TABLE_NAME.format(table_name), level=LOG_LEVEL_INFO)
@@ -1354,7 +1354,7 @@ class QradarApi:
         table_names = []
         qpylib.log(GET_TABLES, level=LOG_LEVEL_INFO)
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
         response = request.send(
@@ -1396,7 +1396,7 @@ class QradarApi:
         params = {FILTER: FILTER_NAME_PYTHON}
 
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
 
         url = HTTPS + str(console_address)
 
@@ -1457,7 +1457,7 @@ class QradarApi:
 
         params = {FILTER: FILTER_FILE_NAME}
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
         response = request.send(
@@ -1520,7 +1520,7 @@ class QradarApi:
         script_path = qpylib.get_root_path() + ACTION_FILE_PATH
         data = open(script_path, FILE_READ_BYTES).read()
 
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
         response = request.send(
@@ -1567,7 +1567,7 @@ class QradarApi:
         params = {KEY_SCRIPT_ID: str(script_nu)}
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
 
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
         endpoint = QRADAR_SCRIPTS + SLASH + str(script_nu)
         request = CustomAuth.get_qradar_request(url)
@@ -1613,7 +1613,7 @@ class QradarApi:
 
         params = {FILTER: NAME + EQUAL_TO + action_name}
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
         response = request.send(
@@ -1750,7 +1750,7 @@ class QradarApi:
 
         data = json.dumps(params)
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
         response = request.send(
@@ -1797,7 +1797,7 @@ class QradarApi:
 
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
 
-        console_address = qpylib.get_console_address()
+        console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
         endpoint = QRADAR_ACTIONS + SLASH + str(action_id)
         request = CustomAuth.get_qradar_request(url)
@@ -1882,7 +1882,7 @@ class QradarApi:
         kwargs["p1_eiq_url"] = config_data.get(HOST)
         kwargs["p2_eiq_ver"] = VERSION_1
         kwargs["p3_api_key"] = config_data.get(API_KEY)
-        kwargs["p4_qradar_url"] = HTTPS + str(qpylib.get_console_address())
+        kwargs["p4_qradar_url"] = HTTPS + str(qpylib.get_console_fqdn())
 
         kwargs["p5_sec_token"] = config_data.get(QRADAR_SECURITY_TOKEN)
         kwargs["p6_app_id"] = str(qpylib.get_app_id())
