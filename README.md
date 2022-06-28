@@ -18,3 +18,24 @@
 * EclecticIQ data processing pipeline ingests, normalizes, transforms, and enriches this incoming threat data into a complex, and flexible data structure. Next, our technology optimizes and prioritizes this data to help identify the most critical threats more rapidly.
 * For total flexibility, EclecticIQ Intelligence Center disseminates intelligence as reports for stakeholders or as machine-readable feeds that integrate with third-party controls to improve detection, hunting, and response.
 * EclecticIQ Intelligence Center offers cloud-like scalability and cost-effectiveness within your trusted environment.
+
+## Installation
+
+### Create a build file
+
+1. Select `app`, `container`, `store` directory, and `manifest.json` file.
+2. Zip above directories and files together in a a file `<4 digit number>`. e.g. `1952.zip`
+3. Open `EclecticIQ_1.0.0.xml` file.
+4. In `application_zip` XML tag, change the `filedata` tag value to match to the zip file, e.g.
+
+   ```xml
+   <filedata>EclecticIQ_1.0.0/1952.zip</filedata>
+   ```
+5. Change the `id` tag value in `application_zip` to match to the zip file. E.g.
+   ```xml
+   <id>/store/qapp/1952/1952.zip</id>
+   ```
+6. Create Directory name matching with `filedata` tag value. E.g. `EclecticIQ_1.0.0`.
+7. Copy zipped file in this directory.
+8. Select directory created in step `6` above, `EclecticIQ_1.0.0.xml` and `manifest.txt` file.
+9. Create a new Zip filed with name matching the directory name created in step `6` above. E.g. `EclecticIQ_1.0.0.zip`
