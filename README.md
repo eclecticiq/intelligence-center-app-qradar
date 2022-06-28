@@ -23,7 +23,7 @@
 
 ### Create a build file
 
-1. Select `app`, `container`, `store` directory, and `manifest.json` file.
+1. Select `app`, `container` directory, and `manifest.json` file.
 2. Zip above directories and files together in a a file `<4 digit number>`. e.g. `1952.zip`
 3. Open `EclecticIQ_1.0.0.xml` file.
 4. In `application_zip` XML tag, change the `filedata` tag value to match to the zip file, e.g.
