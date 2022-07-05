@@ -1,0 +1,50 @@
+{
+	"_id": "3660ceb2bec577d4e49cda9f3184552b",
+	"doc": {
+		"extension_manifest": {
+			"locale": {
+				"en-US": {
+					"extension.name": "Threat Intelligence EclecticIQ Platform App QRadar v7.3.3FP6+",
+					"extension.short.description": "EclecticIQ App for QRadar",
+					"extension.long.description": "The EclecticIQ Platform acquires cyber threat data in different formats from multiple sources. It de-duplicates, normalizes, and enriches source data with additional contextual details and feeds the relevant information to QRadar.\n\nWith this app you can ingest data from the EclecticIQ Platform to QRadar and put it into reference tables. The app also contains custom actions to send back sightings into the EclecticIQ Platform for automatic dissemination and analyst review.\n\nThe app enables you to lookup information in the EclecticIQ Platform from QRadar and create Sightings from the UI."
+				}
+			},
+			"extension_name": "extension.name",
+			"extension_short_description": "extension.short.description",
+			"extension_long_description": "extension.long.description",
+			"supported_language_set": [
+				"en-US"
+			],
+			"min_qradar_version": "2019.14.6",
+			"version": "2.0.0",
+			"authored_by": "EclecticIQ Support",
+			"authored_by_email": "support@eclecticiq.com",
+			"package_size": "2077200",
+			"extension_hub": {
+			"tags": {
+				"contents": {
+					"Custom List": 0,
+					"Dashboard": 0,
+					"Reports": 0,
+					"Saved Search": 0,
+					"FGroup": 0,
+					"FGroup Type": 0,
+					"Custom Rule": 0,
+					"Custom Properties": 0,
+					"Log Sources": 0,
+					"Log Source Type": 0,
+					"Log Source Category": 0,
+					"Log Source Extension": 0,
+					"Custom QidMap Entries": 0,
+					"Reference Data Collection": 0,
+					"Historical Correlation profile": 0,
+					"Custom Functions": 0,
+					"Custom Actions": 0,
+					"Application": 1,
+					"Other": 0
+				}
+			}
+		}
+		}
+	}
+}
