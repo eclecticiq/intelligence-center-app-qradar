@@ -35,7 +35,7 @@
    ```xml
    <id>/store/qapp/1952/1952.zip</id>
    ```
-6. Create Directory name matching with `filedata` tag value. E.g. `EclecticIQ_1.0.0`.
+6. Create Directory name matching with `filedata` tag value. E.g. `extension`.
 7. Copy zipped file in this directory.
 8. Select directory created in step `6` above, `extension.xml` and `manifest.txt` file.
 9. Create a new Zip filed with name matching the directory name created in step `6` above. E.g. `extension.zip`
