@@ -25,11 +25,13 @@
 
 1. Select `app`, `container` directory, and `manifest.json` file.
 2. Zip above directories and files together in a a file `<4 digit number>`. e.g. `1952.zip`
+
 3. Open `extension.xml` file.
 4. In `application_zip` XML tag, change the `filedata` tag value to match to the zip file, e.g.
 
    ```xml
    <filedata>extension/1952.zip</filedata>
+
    ```
 5. Change the `id` tag value in `application_zip` to match to the zip file. E.g.
    ```xml
@@ -39,3 +41,4 @@
 7. Copy zipped file in this directory.
 8. Select directory created in step `6` above, `extension.xml` and `manifest.txt` file.
 9. Create a new Zip filed with name matching the directory name created in step `6` above. E.g. `extension.zip`
+
