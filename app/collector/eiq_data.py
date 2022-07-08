@@ -3,11 +3,10 @@
 Process data to ingest in Qradar  .
 """
 import json
-import sys
 import datetime
 import time
 
-from app.configs.sighting import SIGHTING_SCHEMA, SIGHTING_VALUES, SIGHTINGS_FIELDS_LIST
+from app.configs.sighting import SIGHTING_SCHEMA
 from app.checkpoint_store import read_checkpoint, write_checkpoint
 from app.database.handler import insert_data_to_table
 from app.collector.request import Request
@@ -18,12 +17,9 @@ from app.configs.eiq_api import (
     EIQ_OUTGOING_FEEDS,
     EIQ_PERMISSIONS,
     EIQ_USER_PERMISSIONS,
-    QRADAR_ACTIONS,
     QRADAR_BULK_LOAD,
-    QRADAR_INTERPERTERS,
     QRADAR_REFERENCE_TABLE,
     QRADRAR_REFERENCE_DELETE_TASKS,
-    QRADAR_SCRIPTS,
 )
 from app.constants.defaults import (
     DEFAULT_LIMIT,
@@ -34,39 +30,25 @@ from app.constants.defaults import (
     DEFAULT_VERIFY_SSL,
 )
 from app.constants.general import (
-    ACTION_FILE_NAME,
-    ACTION_FILE_PATH,
-    ACTION_TYPE,
     ALNIC,
     API_KEY,
     AUTH_USER,
     BACKFILL_TIME,
     BEARER_TOKEN,
     CONFIDENCE_KEY,
-    CONTENT_TYPE,
     COUNT,
     CREATED_AT,
     DATA,
     DELETE,
     DESC_BY_LAST_UPDATED_AT,
     DESC_KEY,
-    DESC_VALUE,
-    DYNAMIC,
     EIQ,
     EIQ_,
     EIQ_SIGHTING,
     EIQ_VALUE,
     ELEMENT_TYPE,
-    ENCRYPTED_KEY,
-    EQUAL_TO,
-    ERROR_STRING,
-    FILE_READ_BYTES,
-    FILTER,
-    FILTER_FILE_NAME,
     FILTER_LAST_UPDATED_AT,
-    FILTER_NAME_PYTHON,
     FILTER_OUTGOING_FEEDS,
-    FIXED,
     GET,
     GLUE_COLONS,
     HEADERS,
@@ -74,14 +56,10 @@ from app.constants.general import (
     HTTPS,
     ID,
     INGEST_TIME_KEY,
-    INTERPRETER_KEY,
-    KEY_FILE_NAME,
     KEY_NAME,
     KEY_NAME_TYPES,
-    KEY_SCRIPT_ID,
     LAST_UPDATED_AT,
     LIMIT,
-    LOG_LEVEL_DEBUG,
     LOG_LEVEL_ERROR,
     LOG_LEVEL_INFO,
     MALICIOUSNESS,
@@ -96,19 +74,8 @@ from app.constants.general import (
     OFFSET,
     OUTER_KEY_LABEL,
     OUTGOING_FEEDS,
-    P1_EIQ_URL,
-    P2_EIQ_VERSION,
-    P3_API_KEY,
-    P4_QRADAR_URL,
-    P5_SEC_TOKEN,
-    P6_APP_ID,
-    P6_EIQ_TYPE,
-    P7_EIQ_VALUE,
     PAGE_SIZE,
     PERMISSIONS,
-    PARAM_TYPE_KEY,
-    PARAM_VALUE,
-    PARAMS,
     PLUS,
     POST,
     QRADAR_SECURITY_TOKEN,
@@ -117,7 +84,6 @@ from app.constants.general import (
     READ_OUTGOING_FEEDS,
     READ_PERMSSIONS,
     RETRY_INTERVAL,
-    SCRIPT_KEY,
     SEC_KEY,
     SELF,
     SECURITY_CONTROL,
@@ -136,7 +102,6 @@ from app.constants.general import (
     STATUS_CODE_422,
     STATUS_CODE_500,
     STR_TWO,
-    STR_ZERO,
     TAGS_KEY,
     TIME_KEY,
     TIME_STAMP,
@@ -145,10 +110,8 @@ from app.constants.general import (
     TYPE,
     UNDERSCORE,
     VALUE,
-    VALUE_KEY,
     VERIFY_SSL,
     VERSION,
-    VERSION_1,
 )
 from app.constants.messages import (
     ADD_OBSERVABLES,
@@ -161,7 +124,6 @@ from app.constants.messages import (
     BULK_LOAD_UPDATE_ERROR,
     CHECK_QRADAR_REFERENCE_TABLE,
     CHECK_QRADAR_REFERENCE_TABLES,
-    CHECKING_PYTHON_INTERPRETER,
     CHECKPOINT_FOUND,
     CHECKPOINT_SUCCESSFULLY_WRITTEN,
     COLLECTING_OBSERVABLE,
@@ -198,35 +160,6 @@ from app.constants.messages import (
     OBSERVABLES_AND_CHECKPOINT_RECEIVED,
     OBSERVABLES_FOUND,
     PENDING_OBSERVABLES,
-    QRADAR_ACTION_CREATED,
-    QRADAR_ACTION_NOT_AVAILABLE,
-    QRADAR_ACTION_SCRIPT_CREATED,
-    QRADAR_ACTION_DELETED,
-    QRADAR_ACTION_ID_NOT_FOUND,
-    QRADAR_ACTION_ID_RETIEVED,
-    QRADAR_ACTION_SCRIPT_DELETED,
-    QRADAR_ACTION_SCRIPT_NOT_CREATED,
-    QRADAR_ACTION_SCRIPT_NOT_FOUND,
-    QRADAR_ACTION_SCRIPT_RETRIEVED,
-    QRADAR_API_ERROR,
-    QRADAR_API_INTERNAL_SERVER_ERROR,
-    QRADAR_CHECKING_ACTION,
-    QRADAR_CHECKING_ACTION_SCRIPT,
-    QRADAR_CREATING_ACTION,
-    QRADAR_CREATING_ACTION_SCRIPT,
-    QRADAR_DELETING_ACTION,
-    QRADAR_DELETING_ACTION_SCRIPT,
-    QRADAR_INETERNAL_SERVER_ERROR_CREATING_ACTION,
-    QRADAR_INETERNAL_SERVER_ERROR_DELETING_ACTION,
-    QRADAR_INETERNAL_SERVER_ERROR_RETRIEVING_ACTION,
-    QRADAR_INTERNAL_SERVER_ERROR_CHECKING_ACTION,
-    QRADAR_INTERNAL_SERVER_ERROR_CREATING_ACTION_SCRIPT,
-    QRADAR_INTERPERTER_CHECKED,
-    QRADAR_INTERPERTER_ID_NOT_FOUND,
-    QRADAR_INTERPRETER_ID_NOT_FOUND,
-    QRADAR_MULTIPLE_ACTION_ID_FOUND,
-    QRADAR_MULTIPLE_ACTION_SCRIPT_FOUND,
-    QRADAR_MULTIPLE_INTERPRETER_FOUND,
     REFERENCE_TABLE_DOES_NOT_EXIST,
     REQUEST_DOES_NOT_EXIST,
     REFERENCE_TABLE_REQUEST_ACCEPTED,
@@ -1383,514 +1316,3 @@ class QradarApi:
             response = self.delete_reference_tables(table_names)
 
         return response
-
-    def check_py_interpeter(self):
-        """Get the Python Interpreters from Qradar.
-
-        :return: Interpreter ID or False
-        :rtype: int/bool
-        """
-        func_name = sys._getframe().f_code.co_name
-        qpylib.log(CHECKING_PYTHON_INTERPRETER.format(func_name), level=LOG_LEVEL_DEBUG)
-
-        params = {FILTER: FILTER_NAME_PYTHON}
-
-        headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_fqdn()
-
-        url = HTTPS + str(console_address)
-
-        request = CustomAuth.get_qradar_request(url)
-        response = request.send(
-            GET,
-            endpoint=QRADAR_INTERPERTERS,
-            params=params,
-            verify=DEFAULT_VERIFY_SSL,
-            **headers,
-        )
-
-        if response.status_code == 500:
-            qpylib.log(
-                QRADAR_API_INTERNAL_SERVER_ERROR.format(func_name),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = False
-        elif response.status_code not in [200, 201]:
-            qpylib.log(
-                QRADAR_API_ERROR.format(
-                    func_name, response.status_code, response.content
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = False
-        else:
-            if len(response.json()) == 1:
-                qpylib.log(
-                    QRADAR_INTERPERTER_CHECKED.format(func_name), level=LOG_LEVEL_DEBUG
-                )
-                return_val = response.json()[0][ID]
-            elif len(response.json()) == 0:
-                qpylib.log(
-                    QRADAR_INTERPERTER_ID_NOT_FOUND.format(func_name),
-                    level=LOG_LEVEL_ERROR,
-                )
-                return_val = False
-            else:
-                # by default take first
-                qpylib.log(
-                    QRADAR_MULTIPLE_INTERPRETER_FOUND.format(func_name),
-                    level=LOG_LEVEL_ERROR,
-                )
-                return_val = response.json()[0][ID]
-        return return_val
-
-    def check_action_script(self):
-        """Get the Action Scripts from Qradar.
-
-        :return: Action Scripts ID or False
-        :rtype: dict/bool
-        """
-        func_name = sys._getframe().f_code.co_name
-        qpylib.log(
-            QRADAR_CHECKING_ACTION_SCRIPT.format(func_name), level=LOG_LEVEL_INFO
-        )
-
-        params = {FILTER: FILTER_FILE_NAME}
-        headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_fqdn()
-        url = HTTPS + str(console_address)
-        request = CustomAuth.get_qradar_request(url)
-        response = request.send(
-            GET,
-            endpoint=QRADAR_SCRIPTS,
-            params=params,
-            verify=DEFAULT_VERIFY_SSL,
-            **headers,
-        )
-        if response.status_code == 500:
-            qpylib.log(
-                QRADAR_INTERNAL_SERVER_ERROR_CHECKING_ACTION.format(func_name),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = False
-        elif response.status_code not in [200, 201]:
-            qpylib.log(
-                QRADAR_API_ERROR.format(
-                    func_name, response.status_code, response.content
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = False
-        else:
-            if len(response.json()) == 1:
-                qpylib.log(
-                    QRADAR_ACTION_SCRIPT_RETRIEVED.format(func_name),
-                    level=LOG_LEVEL_DEBUG,
-                )
-                return_val = response.json()
-            elif len(response.json()) == 0:
-                qpylib.log(
-                    QRADAR_ACTION_SCRIPT_NOT_FOUND.format(func_name),
-                    level=LOG_LEVEL_DEBUG,
-                )
-                return_val = response.json()
-            else:
-                qpylib.log(
-                    QRADAR_MULTIPLE_ACTION_SCRIPT_FOUND.format(func_name),
-                    level=LOG_LEVEL_DEBUG,
-                )
-                return_val = response.json()
-        return return_val
-
-    def set_action_script(self):
-        """Set the Action Scripts in Qradar.
-
-        :return: Action set or not
-        :rtype: bool
-        """
-        func_name = sys._getframe().f_code.co_name
-        qpylib.log(
-            QRADAR_CREATING_ACTION_SCRIPT.format(func_name), level=LOG_LEVEL_DEBUG
-        )
-
-        headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        headers[HEADERS][KEY_FILE_NAME] = ACTION_FILE_NAME
-        headers[HEADERS][CONTENT_TYPE] = "application/octet-stream"
-
-        script_path = qpylib.get_root_path() + ACTION_FILE_PATH
-        data = open(script_path, FILE_READ_BYTES).read()
-
-        console_address = qpylib.get_console_fqdn()
-        url = HTTPS + str(console_address)
-        request = CustomAuth.get_qradar_request(url)
-        response = request.send(
-            POST,
-            endpoint=QRADAR_SCRIPTS,
-            data=data,
-            verify=DEFAULT_VERIFY_SSL,
-            **headers,
-        )
-
-        if response.status_code == 500:
-            qpylib.log(
-                QRADAR_INTERNAL_SERVER_ERROR_CREATING_ACTION_SCRIPT.format(func_name),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = False
-        elif response.status_code not in [200, 201]:
-            qpylib.log(
-                QRADAR_API_ERROR.format(
-                    func_name, response.status_code, response.content
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = False
-        else:
-            qpylib.log(
-                QRADAR_ACTION_SCRIPT_CREATED.format(func_name), level=LOG_LEVEL_INFO
-            )
-            return_val = True
-        return return_val
-
-    def delete_action_script(self, script_nu):
-        """Delete the Action Scripts from Qradar.
-
-        :param script_nu: Script Number
-        :type script_nu: int
-        """
-        func_name = sys._getframe().f_code.co_name
-        qpylib.log(
-            QRADAR_DELETING_ACTION_SCRIPT.format(func_name, script_nu),
-            level=LOG_LEVEL_INFO,
-        )
-
-        params = {KEY_SCRIPT_ID: str(script_nu)}
-        headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-
-        console_address = qpylib.get_console_fqdn()
-        url = HTTPS + str(console_address)
-        endpoint = QRADAR_SCRIPTS + SLASH + str(script_nu)
-        request = CustomAuth.get_qradar_request(url)
-        response = request.send(
-            DELETE,
-            endpoint=endpoint,
-            params=params,
-            verify=DEFAULT_VERIFY_SSL,
-            **headers,
-        )
-
-        if response.status_code == 500:
-            qpylib.log(
-                QRADAR_INETERNAL_SERVER_ERROR_DELETING_ACTION.format(
-                    func_name, script_nu
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-        elif response.status_code not in [200, 201, 204]:
-            qpylib.log(
-                QRADAR_API_ERROR.format(
-                    func_name, response.status_code, response.content
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-        else:
-            qpylib.log(
-                QRADAR_ACTION_DELETED.format(func_name, script_nu), level=LOG_LEVEL_INFO
-            )
-
-    def check_action(self, action_name):
-        """Check if the Actions are available in Qradar.
-
-        :param action_name: Name of action
-        :type action_name: string
-        :return: Error String or Response
-        :rtype: dict/string
-        """
-        func_name = sys._getframe().f_code.co_name
-        qpylib.log(
-            QRADAR_CHECKING_ACTION.format(func_name, action_name), level=LOG_LEVEL_DEBUG
-        )
-
-        params = {FILTER: NAME + EQUAL_TO + action_name}
-        headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_fqdn()
-        url = HTTPS + str(console_address)
-        request = CustomAuth.get_qradar_request(url)
-        response = request.send(
-            GET,
-            endpoint=QRADAR_ACTIONS,
-            params=params,
-            verify=DEFAULT_VERIFY_SSL,
-            **headers,
-        )
-
-        if response.status_code == 500:
-            qpylib.log(
-                QRADAR_INETERNAL_SERVER_ERROR_RETRIEVING_ACTION.format(func_name),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = ERROR_STRING
-        elif response.status_code not in [200, 201]:
-            qpylib.log(
-                QRADAR_API_ERROR.format(
-                    func_name, response.status_code, response.content
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = ERROR_STRING
-        else:
-            if len(response.json()) == 1:
-                qpylib.log(
-                    QRADAR_ACTION_ID_RETIEVED.format(func_name, action_name),
-                    level=LOG_LEVEL_DEBUG,
-                )
-                return_val = response.json()
-            elif len(response.json()) == 0:
-                qpylib.log(
-                    QRADAR_ACTION_ID_NOT_FOUND.format(func_name), level=LOG_LEVEL_DEBUG
-                )
-                return_val = STR_ZERO
-            else:
-                qpylib.log(
-                    QRADAR_MULTIPLE_ACTION_ID_FOUND.format(func_name),
-                    level=LOG_LEVEL_DEBUG,
-                )
-                return_val = response.json()
-        return return_val
-
-    def set_action(self, action_name, py_interpreter_id, script_id, **kwargs):
-        """Set the Action in Qradar.
-
-        :param action_name: action_name of action
-        :type action_name: string
-        :param py_interpreter_id: python interpreter id
-        :type py_interpreter_id: int
-        :param script_id: Script Id in Qradar
-        :type script_id: int
-        :param p1_eiq_url: Host of EclecticIQ
-        :type p1_eiq_url: string
-        :param p2_eiq_ver: EclecticIQ API Version
-        :type p2_eiq_ver: string
-        :param p3_api_key: EclecticIQ API Key
-        :type p3_api_key: string
-        :param p4_qradar_url: Qradar host
-        :type p4_qradar_url: string
-        :param p5_sec_token: Qradar SEC token
-        :type p5_sec_token: string
-        :param p6_app_id: Qradar App ID
-        :type p6_app_id: string
-        :param p6_eiq_type: Type of event field
-        :type p6_eiq_type: string
-        :param p7_eiq_value: Value of event field
-        :type p7_eiq_value: string
-        :return: Error String or Response
-        :rtype: None
-        """
-        func_name = sys._getframe().f_code.co_name
-        qpylib.log(
-            QRADAR_CREATING_ACTION.format(func_name, action_name), level=LOG_LEVEL_INFO
-        )
-
-        params = {
-            DESC_KEY: DESC_VALUE,
-            INTERPRETER_KEY: py_interpreter_id,
-            NAME: action_name,
-            PARAMS: [
-                {
-                    ENCRYPTED_KEY: False,
-                    NAME: P1_EIQ_URL,
-                    PARAM_TYPE_KEY: FIXED,
-                    VALUE_KEY: kwargs["p1_eiq_url"],
-                },
-                {
-                    ENCRYPTED_KEY: False,
-                    NAME: P2_EIQ_VERSION,
-                    PARAM_TYPE_KEY: FIXED,
-                    VALUE_KEY: kwargs["p2_eiq_ver"],
-                },
-                {
-                    ENCRYPTED_KEY: True,
-                    NAME: P3_API_KEY,
-                    PARAM_TYPE_KEY: FIXED,
-                    VALUE_KEY: kwargs["p3_api_key"],
-                },
-                {
-                    ENCRYPTED_KEY: False,
-                    NAME: P4_QRADAR_URL,
-                    PARAM_TYPE_KEY: FIXED,
-                    VALUE_KEY: kwargs["p4_qradar_url"],
-                },
-                {
-                    ENCRYPTED_KEY: True,
-                    NAME: P5_SEC_TOKEN,
-                    PARAM_TYPE_KEY: FIXED,
-                    VALUE_KEY: kwargs["p5_sec_token"],
-                },
-                {
-                    ENCRYPTED_KEY: False,
-                    NAME: P6_APP_ID,
-                    PARAM_TYPE_KEY: FIXED,
-                    VALUE_KEY: kwargs["p6_app_id"],
-                },
-                {
-                    ENCRYPTED_KEY: False,
-                    NAME: P6_EIQ_TYPE,
-                    PARAM_TYPE_KEY: FIXED,
-                    VALUE_KEY: kwargs["p6_eiq_type"],
-                },
-                {
-                    ENCRYPTED_KEY: False,
-                    NAME: P7_EIQ_VALUE,
-                    PARAM_TYPE_KEY: DYNAMIC,
-                    VALUE_KEY: kwargs["p7_eiq_value"],
-                },
-            ],
-            SCRIPT_KEY: script_id,
-        }
-
-        data = json.dumps(params)
-        headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-        console_address = qpylib.get_console_fqdn()
-        url = HTTPS + str(console_address)
-        request = CustomAuth.get_qradar_request(url)
-        response = request.send(
-            POST,
-            endpoint=QRADAR_ACTIONS,
-            data=data,
-            verify=DEFAULT_VERIFY_SSL,
-            **headers,
-        )
-        if response.status_code == 500:
-            qpylib.log(
-                QRADAR_INETERNAL_SERVER_ERROR_CREATING_ACTION.format(
-                    func_name, action_name
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = ERROR_STRING
-        elif response.status_code not in [200, 201]:
-            qpylib.log(
-                QRADAR_API_ERROR.format(
-                    func_name, response.status_code, response.content
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = ERROR_STRING
-        else:
-            qpylib.log(
-                QRADAR_ACTION_CREATED.format(func_name, action_name),
-                level=LOG_LEVEL_INFO,
-            )
-            return_val = True
-        return return_val
-
-    def delete_action(self, action_id):
-        """Delete the Action in Qradar.
-
-        :param action_id: id of action
-        :type action_id: string
-        """
-        func_name = sys._getframe().f_code.co_name
-        qpylib.log(
-            QRADAR_DELETING_ACTION.format(func_name, action_id), level=LOG_LEVEL_INFO
-        )
-
-        headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
-
-        console_address = qpylib.get_console_fqdn()
-        url = HTTPS + str(console_address)
-        endpoint = QRADAR_ACTIONS + SLASH + str(action_id)
-        request = CustomAuth.get_qradar_request(url)
-        response = request.send(
-            DELETE,
-            endpoint=endpoint,
-            verify=DEFAULT_VERIFY_SSL,
-            **headers,
-        )
-
-        if response.status_code == 500:
-            qpylib.log(
-                QRADAR_INETERNAL_SERVER_ERROR_CREATING_ACTION.format(
-                    func_name, action_id
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = ERROR_STRING
-        elif response.status_code not in [200, 201, 204]:
-            qpylib.log(
-                QRADAR_API_ERROR.format(
-                    func_name, response.status_code, response.content
-                ),
-                level=LOG_LEVEL_ERROR,
-            )
-            return_val = ERROR_STRING
-        else:
-            qpylib.log(
-                QRADAR_ACTION_CREATED.format(func_name, action_id), level=LOG_LEVEL_INFO
-            )
-            return_val = True
-        return return_val
-
-    @staticmethod
-    def create_custom_actions(config_data):
-        """Create the custom actions in Qradar driver method.
-
-        :param config_data: configurations
-        :type config_data: dict
-        :return: Created or Not
-        :rtype: bool
-        """
-        func_name = sys._getframe().f_code.co_name
-
-        py_interpreter_id = QradarApi().check_py_interpeter()
-        if not py_interpreter_id:
-            qpylib.log(QRADAR_INTERPRETER_ID_NOT_FOUND.format(func_name))
-            return False
-        action_scripts_dict = QradarApi().check_action_script()
-
-        if len(action_scripts_dict) == 0:
-            return_val = QradarApi().set_action_script()
-            if not return_val:
-                qpylib.log(QRADAR_ACTION_SCRIPT_NOT_CREATED.format(func_name))
-                return False
-        elif len(action_scripts_dict) > 0:
-
-            for k in SIGHTINGS_FIELDS_LIST:
-                qr_actions_id = QradarApi().check_action(k)
-                try:
-                    QradarApi().delete_action(qr_actions_id[0][ID])
-                    qpylib.log(
-                        QRADAR_ACTION_SCRIPT_DELETED.format(func_name, k),
-                        level=LOG_LEVEL_DEBUG,
-                    )
-                except TypeError:
-                    qpylib.log(
-                        QRADAR_ACTION_NOT_AVAILABLE.format(func_name, k),
-                        level=LOG_LEVEL_DEBUG,
-                    )
-
-            for k in action_scripts_dict:
-                QradarApi().delete_action_script(k[ID])
-
-            return_val = QradarApi().set_action_script()
-            if not return_val:
-                qpylib.log(QRADAR_ACTION_SCRIPT_NOT_CREATED.format(func_name))
-                return False
-
-        action_scripts_dict = QradarApi().check_action_script()
-        kwargs = {}
-        kwargs["p1_eiq_url"] = config_data.get(HOST)
-        kwargs["p2_eiq_ver"] = VERSION_1
-        kwargs["p3_api_key"] = config_data.get(API_KEY)
-        kwargs["p4_qradar_url"] = HTTPS + str(qpylib.get_console_fqdn())
-
-        kwargs["p5_sec_token"] = config_data.get(QRADAR_SECURITY_TOKEN)
-        kwargs["p6_app_id"] = str(qpylib.get_app_id())
-        for item in SIGHTING_VALUES.items():
-            kwargs["p6_eiq_type"] = item[1][ACTION_TYPE]
-            kwargs["p7_eiq_value"] = item[1][PARAM_VALUE]
-            action_name = item[0]
-            QradarApi().set_action(
-                action_name, py_interpreter_id, action_scripts_dict[0][ID], **kwargs
-            )
-        return True

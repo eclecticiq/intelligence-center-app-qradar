@@ -23,7 +23,7 @@ SCHEDULER_STATE_MODIFIED_SUCCESS = "Scheduler state modified to {state}"
 SETUP_CALLED = "Setup called !"
 TEST_CONNECTION = "Test Connection !"
 SAVE_CONFIGURATION = "Save configuration!"
-TEST_CONNECTION_SUCCESSFULL = "Test Connection Successful."
+TEST_CONNECTION_SUCCESSFULL = "Test Connection Successfull ."
 USER_UNAUTHORIZED = "Error! 500 not authorised ."
 GET_CONFIGURATION = "Get configuration!"
 CONFIGURATION_SAVED_SUCCESSFULLY = "Configuration saved Successfully ."
@@ -180,47 +180,6 @@ TASK_STATUS_RETREIVED = (
 # Database errors
 DB_CONNECTION_ERROR = "Error! cannot create the database connection."
 DB_CONSTRUCTOR_ERROR = "Call instance() instead"
-
-
-# Qradar Custom Actions
-CHECKING_PYTHON_INTERPRETER = "QRadar_api.{0}: Checking python interpreter ID."
-QRADAR_API_ERROR = "QRadar_api.{0}: Error. Code: {1} Text: {2}."
-QRADAR_API_INTERNAL_SERVER_ERROR = "QRadar_api.{0}: An internal server error occurred while retrieving available custom action interpreters."
-QRADAR_INTERPERTER_CHECKED = "QRadar_api.{0}: Python interpreter ID checked."
-QRADAR_INTERPERTER_ID_NOT_FOUND = "QRadar_api.{0}: Python interpreter ID not found."
-QRADAR_MULTIPLE_INTERPRETER_FOUND = (
-    "QRadar_api.{0}: Found more than one Python interpreter."
-)
-QRADAR_CHECKING_ACTION_SCRIPT = "QRadar_api.{0}: Checking Custom Action script."
-QRADAR_INTERNAL_SERVER_ERROR_CHECKING_ACTION = "QRadar_api.{0}: An internal server error occurred while retrieving custom action script."
-QRADAR_ACTION_SCRIPT_RETRIEVED = "QRadar_api.{0}: Custom Action Script ID retrieved."
-QRADAR_ACTION_SCRIPT_NOT_FOUND = "QRadar_api.{0}: Custom Action Script ID not found."
-QRADAR_MULTIPLE_ACTION_SCRIPT_FOUND = (
-    "QRadar_api.{0}: Found more than one Custom Action Script ID."
-)
-QRADAR_CREATING_ACTION_SCRIPT = "QRadar_api.{0}: Creating Custom Action script."
-QRADAR_INTERNAL_SERVER_ERROR_CREATING_ACTION_SCRIPT = "QRadar_api.{0}: An internal server error occurred while posting custom action script file."
-QRADAR_ACTION_SCRIPT_CREATED = "QRadar_api.{0}: Custom Action Script created."
-QRADAR_DELETING_ACTION_SCRIPT = "QRadar_api.{0}: Deleteing Custom Action script #{1}."
-QRADAR_INETERNAL_SERVER_ERROR_DELETING_ACTION = "QRadar_api.{0}: An internal server error occurred while deleting custom action script file with script #{1}."
-QRADAR_ACTION_SCRIPT_DELETED = "QRadar_api.{0}: Custom Action Script #{1} deleted."
-QRADAR_CHECKING_ACTION = "QRadar_api.{0}: Checking Custom Action: {1}."
-QRADAR_INETERNAL_SERVER_ERROR_RETRIEVING_ACTION = (
-    "QRadar_api.{0}: An internal server error occurred while retrieving custom actions."
-)
-QRADAR_ACTION_ID_RETIEVED = "QRadar_api.{0}: Custom Action {1} ID retrieved."
-QRADAR_ACTION_ID_NOT_FOUND = "QRadar_api.{0}: Custom Action ID not found."
-QRADAR_MULTIPLE_ACTION_ID_FOUND = (
-    "QRadar_api.{0}: Found more than one Custom Action ID."
-)
-QRADAR_CREATING_ACTION = "QRadar_api.{0}: Creating Custom Action: {1}."
-QRADAR_INETERNAL_SERVER_ERROR_CREATING_ACTION = "QRadar_api.{0}: An internal server error occurred while creating Custom Action {1}."
-QRADAR_ACTION_CREATED = "QRadar_api.{0}: Custom Action {1} created."
-QRADAR_DELETING_ACTION = "QRadar_api.{0}: Deleting Custom Action: {1}."
-QRADAR_ACTION_DELETED = "QRadar_api.{0}: Custom Action {1} has been deleted."
-QRADAR_ACTION_NOT_AVAILABLE = "QRadar_api.{0}: Custom Action {1} not available."
-QRADAR_INTERPRETER_ID_NOT_FOUND = "QRadar_api.{0}: Can not find interpreter id."
-QRADAR_ACTION_SCRIPT_NOT_CREATED = "QRadar_api.{0}: Custom Action Script not created."
 
 
 # Sighting

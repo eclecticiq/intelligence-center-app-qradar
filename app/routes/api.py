@@ -197,8 +197,6 @@ def save_configuration():
         config[HOST] = host
 
         config[STATUS_STRING] = CONFIGURATION_SAVED_SUCCESSFULLY
-
-        qradar_api.create_custom_actions(config)
         return render_template(SETUP_TEMPLATE, context=config)
 
     config[STATUS_STRING] = MISSING_PERMISSIONS.format(missing_permissions)
