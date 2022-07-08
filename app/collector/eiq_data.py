@@ -24,9 +24,11 @@ from app.configs.eiq_api import (
 from app.constants.defaults import (
     DEFAULT_LIMIT,
     DEFAULT_MAX_RETRY,
+    DEFAULT_MAX_RETRY_USER_PERMISSIONS,
     DEFAULT_PAGE_SIZE,
     DEFAULT_RETRY_INTERVAL,
     DEFAULT_TIMEOUT,
+    DEFAULT_TIMEOUT_USER_PERMISSIONS,
     DEFAULT_VERIFY_SSL,
 )
 from app.constants.general import (
@@ -127,6 +129,7 @@ from app.constants.messages import (
     CHECKPOINT_FOUND,
     CHECKPOINT_SUCCESSFULLY_WRITTEN,
     COLLECTING_OBSERVABLE,
+    CONNECTION_ERROR,
     DATA_FOUND_FOR_FEED_ID_AND_TYPE,
     DATA_NOT_FOUND_FOR_SELECTED_OUTGOING_FEED,
     DELETING_TABLE,
@@ -276,7 +279,7 @@ class CustomAuth:
     def auth_user(self, auth_user):
         self._auth_user = auth_user
 
-    def get_eiq_request(self):
+    def get_eiq_request(self,configs=configs):
         """Get request object for eiq platform APIs.
 
         :return: request object
@@ -537,8 +540,12 @@ class EIQApi:
         """
         permissions = []
         qpylib.log(GETTING_USER_PERMISSIONS, level=LOG_LEVEL_INFO)
-        request = self.auth_config.get_eiq_request()
+        configs_user_permissions = configs
+        configs_user_permissions[TIMEOUT]= DEFAULT_TIMEOUT_USER_PERMISSIONS
+        configs_user_permissions[RETRY_INTERVAL] = DEFAULT_MAX_RETRY_USER_PERMISSIONS
+        request = self.auth_config.get_eiq_request(configs=configs_user_permissions)
         endpoint = self.auth_config.version + EIQ_USER_PERMISSIONS + SLASH + SELF
+        
         response = request.send(GET, endpoint=endpoint, verify=DEFAULT_VERIFY_SSL)
 
         if response.status_code == STATUS_CODE_401:
