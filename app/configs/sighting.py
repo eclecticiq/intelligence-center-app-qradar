@@ -1,21 +1,4 @@
 """Sighting Vars."""
-SIGHTING_VALUES = {
-    "eiq_sighting_s_ip": {"action_type": "ipv4", "param_value": "sourceip"},
-    "eiq_sighting_d_ip": {"action_type": "ipv4", "param_value": "destinationip"},
-    "eiq_sighting_hash_md5": {"action_type": "md5", "param_value": "File Hash"},
-    "eiq_sighting_email": {"action_type": "email", "param_value": "email"},
-    "eiq_sighting_domain": {"action_type": "domain", "param_value": "domain"},
-    "eiq_sighting_uri": {"action_type": "uri", "param_value": "URL"},
-}
-
-SIGHTINGS_FIELDS_LIST = [
-    "eiq_sighting_s_ip",
-    "eiq_sighting_d_ip",
-    "eiq_sighting_hash_md5",
-    "eiq_sighting_email",
-    "eiq_sighting_domain",
-    "eiq_sighting_uri",
-]
 
 
 SIGHTING_SCHEMA = {

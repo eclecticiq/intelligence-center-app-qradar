@@ -158,8 +158,10 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	* Click Select operator > Equals > Submit.
 	* Click Selected event property. For example: Destination IP
 5. Click Next.
-6. Select the checkbox for “Execute Custom Action”
-	* Select Action related to the data type of the rule created. For example if a rule is created for matching Destination IP select custom action as eiq_sighting_d_ip. 
+6. Select the checkbox for “Ensure the detected event is part of an offense”
+	* Select  ”Index offense based on” according to the fields on rule is created. For example if a rule is created for matching Destination IP select Destination IP. 
+	*”Annotate this offense” is optional. User can select and add annotations or text explaining the offense. 
+	*”Include detected events by Destination IP from this point forward, in the offense, for ” is also optional. User can mention time interval in seconds to include detected events in offense.
 7. Click Finish.
 
 ![](/docs/assets/sighting-1.png)

@@ -90,17 +90,14 @@ OFFSET = "offset"
 FILTER_LAST_UPDATED_AT = "filter[>last_updated_at]"
 FILTER_OUTGOING_FEEDS = "filter[outgoing_feeds]"
 SORT = "sort"
-FILTER = "filter"
+
 LAST_UPDATED_AT = "last_updated_at"
 EIQ = "eiq"
 EIQ_ = "eiq_"
 VALUE = "value"
 RANGE = "RANGE"
 ITEMS = "items=0-2"
-FILTER_NAME_PYTHON = "name=Python"
-FILTER_FILE_NAME = 'file_name="custom_eiq_action.py"'
-KEY_FILE_NAME = "file_name"
-CONTENT_TYPE = "Content-Type"
+
 
 NAME = "name"
 DATA = "data"
@@ -159,36 +156,9 @@ TIME_MILLISECOND = 1000
 MULTI_RESULTS = "Multi results"
 
 
-# FILES
-ACTION_FILE_NAME = "custom_eiq_action.py"
-ACTION_FILE_PATH = "/app/collector/custom_eiq_action.py"
-KEY_SCRIPT_ID = "script_id"
-FILE_READ_BYTES = "rb"
-
-
-# Custom Actions
-ACTION_TYPE = "action_type"
-PARAM_VALUE = "param_value"
-
-# Params for set_action
 DESC_KEY = "description"
-INTERPRETER_KEY = "interpreter"
-PARAMS = "parameters"
-ENCRYPTED_KEY = "encrypted"
-PARAM_TYPE_KEY = "parameter_type"
 VALUE_KEY = "value"
 SCRIPT_KEY = "script"
-DESC_VALUE = "EcelectiqIQ custom action for creating Sightings."
-P1_EIQ_URL = "p1_eiq_url"
-P2_EIQ_VERSION = "p2_eiq_ver"
-FIXED = "fixed"
-DYNAMIC = "dynamic"
-P3_API_KEY = "p3_api_key"  # nosec
-P4_QRADAR_URL = "p4_qradar_url"
-P5_SEC_TOKEN = "p5_sec_token"  # nosec
-P6_APP_ID = "p6_app_id"
-P6_EIQ_TYPE = "p6_eiq_type"
-P7_EIQ_VALUE = "p7_eiq_value"
 
 
 # Sighting fields

@@ -66,6 +66,39 @@
       "method": "GET",
       "name": "eiqCreateSighting_func",
       "url": "/eiqCreateSighting_func"
+    },
+    {
+      "argument_names": [
+        "context"
+      ],
+      "method": "POST",
+      "name": "save_configuration",
+      "required_capabilities": [
+        "ADMIN"
+      ],
+      "url": "/save"
+    },
+    {
+      "argument_names": [
+        "context"
+      ],
+      "method": "GET",
+      "name": "get_configuration",
+      "required_capabilities": [
+        "ADMIN"
+      ],
+      "url": "/get"
+    },
+    {
+      "argument_names": [
+        "context"
+      ],
+      "method": "POST",
+      "name": "test_connection",
+      "required_capabilities": [
+        "ADMIN"
+      ],
+      "url": "/test_connection"
     }
   ],
   "uuid": "0c82169f-7630-458c-b4d7-636c2621494d",
