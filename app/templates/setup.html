@@ -124,6 +124,10 @@
  });
 
 function validation() {
+   if($('.checkbox-class:checked').length < 1) {
+   alert('Please select atleast one Outgoing Feed');
+   return false
+   }
    if($('.checkbox-class:checked').length > 4) {
    alert('Maximum 4 outgoing feeds are allowed to be selected');
    return false
