@@ -41,6 +41,7 @@ from app.constants.general import (
     GLUE_COLONS,
     HELLO_TEMPLATE,
     HOST,
+    HTTPS,
     ID,
     INDICATOR_TYPE,
     INTERVAL,
@@ -67,6 +68,7 @@ from app.constants.general import (
     SIGHTING_TITLE,
     SIGHTING_TYPE,
     SIGHTING_VALUE,
+    SLASH,
     START_TIME,
     STATUS_CODE_200,
     STATUS_STRING,
@@ -86,6 +88,7 @@ from app.constants.messages import (
     DELETE_REFERNCE_TABLES,
     GET_CONFIGURATION,
     GET_OUTGOING_FEEDS,
+    HOST_NAME_SHOULD_START_WITH,
     MISSING_PERMISSIONS,
     LOOKUP_OBS_CALLED,
     REMOVING_CHECKPOINT,
@@ -95,6 +98,7 @@ from app.constants.messages import (
     TABLE_DELETED_SUCCESSFULLY,
     TEST_CONNECTION,
     TEST_CONNECTION_SUCCESSFULL,
+    URL_INVALID,
     USER_UNAUTHORIZED,
     VIEW_CREATED_SIGHTING,
 )
@@ -165,16 +169,34 @@ def save_configuration():
     api_key = str(form.get(API_KEY)).strip()
     qradar_security_token = str(form.get(SECURITY_TOKEN)).strip()
 
-    url_split = host.split("/")
-    host_name = url_split[0] + "//" + url_split[2]
-    version_split = "/".join(url_split[3:])
+
     config = {
         AUTH_USER: auth_user,
-        HOST: host_name,
-        VERSION: version_split,
+        HOST: host,
+        VERSION: "",
         API_KEY: api_key,
         QRADAR_SECURITY_TOKEN: qradar_security_token,
     }
+
+    if not host.startswith(HTTPS):
+        qpylib.log(HOST_NAME_SHOULD_START_WITH)
+        config[STATUS_STRING] = HOST_NAME_SHOULD_START_WITH
+        return render_template(HELLO_TEMPLATE, context=config) 
+
+    url_split = host.split(HTTPS)
+    url_split = url_split[1]
+    if len(url_split.split(SLASH)) > 1:
+        host_name = url_split.split(SLASH)[0]
+        version_split = "/".join(url_split.split(SLASH)[1:])
+    else:
+        qpylib.log(URL_INVALID)
+        config[STATUS_STRING] = URL_INVALID
+        return render_template(HELLO_TEMPLATE, context=config) 
+        
+    config[HOST]= HTTPS +host_name
+    config[VERSION]= version_split
+
+    qpylib.log(type(config[HOST]))
 
     # Call to  api to check for authentication
     eiq_api = EIQApi(config)
@@ -252,16 +274,36 @@ def test_connection():
     api_key = str(form.get(API_KEY)).strip()
     qradar_security_token = str(form.get(SECURITY_TOKEN)).strip()
 
-    url_split = host.split("/")
-    host_name = url_split[0] + "//" + url_split[2]
-    version_split = "/".join(url_split[3:])
     config = {
         AUTH_USER: auth_user,
-        HOST: host_name,
-        VERSION: version_split,
+        HOST: host,
+        VERSION: "",
         API_KEY: api_key,
         QRADAR_SECURITY_TOKEN: qradar_security_token,
     }
+
+    if not host.startswith(HTTPS):
+        qpylib.log(HOST_NAME_SHOULD_START_WITH)
+        config[STATUS_STRING] = HOST_NAME_SHOULD_START_WITH
+        return render_template(HELLO_TEMPLATE, context=config) 
+
+    url_split = host.split(HTTPS)
+    url_split = url_split[1]
+    if len(url_split.split(SLASH)) > 1:
+        host_name = url_split.split(SLASH)[0]
+        version_split = "/".join(url_split.split(SLASH)[1:])
+    else:
+        qpylib.log(URL_INVALID)
+        config[STATUS_STRING] = URL_INVALID
+        return render_template(HELLO_TEMPLATE, context=config) 
+        
+    config[HOST]= HTTPS+host_name
+    config[VERSION]= version_split
+
+    qpylib.log(config[HOST])
+    qpylib.log(config[VERSION])
+    qpylib.log(type(config[HOST]))
+    
     eiq_api = EIQApi(config)
     missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
 

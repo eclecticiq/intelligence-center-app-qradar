@@ -204,3 +204,7 @@ CHECKPOINT_REMOVED = "Checkpoint removed successfully."
 LAST_UPDATED_VALUE_NOT_FOUND = (
     "Delete Observables:Last updated value for the observable not found for: {}"
 )
+
+HOST_NAME_SHOULD_START_WITH = "Host name should start with https://"
+URL_INVALID = "The given URL is invalid."
+CONNECTION_ERROR = "Connection Timeout : {}"
