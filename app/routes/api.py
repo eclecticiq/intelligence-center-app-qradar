@@ -299,10 +299,6 @@ def test_connection():
         
     config[HOST]= HTTPS+host_name
     config[VERSION]= version_split
-
-    qpylib.log(config[HOST])
-    qpylib.log(config[VERSION])
-    qpylib.log(type(config[HOST]))
     
     eiq_api = EIQApi(config)
     missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
