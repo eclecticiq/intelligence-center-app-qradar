@@ -167,8 +167,21 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	*”Include detected events by Destination IP from this point forward, in the offense, for ” is also optional. User can mention time interval in seconds to include detected events in offense.
 7. Click Finish.
 8. User can go to Offenses > All Offenses and can View offenses with one of the selected      Option: 	All offsenses
-9. Right click on source > Create EclecticIQ Sighting
-10. User can Create Sighting by mentioning all the details and clicking on Create Sighting button. 
+9. Click on any offense.
+10. Right click on the IP address > Create EclecticIQ Sighting
+11. A pop-up window will appear to ask for the details below. 
+
+Clicking on save will create sightings in the EIQ platform with provided details.
+
+* Sighting Value: Value which is clicked
+* Sighting type: Type of sighting. Possible values: ip, domain, url, email, hash
+* Sighting title: Title of sighting
+* Sighting description: Description of sighting
+* Sighting confidence: Confidence of sighting. Possible values: low, medium, high
+* Sighting tags delimited by a comma: Any tags to attach with sighting
+
+Fill up necessary details.
+12. Click on Create sighting button.
 
 
 ![](/docs/assets/sighting-1.png)
