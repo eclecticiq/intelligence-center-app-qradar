@@ -94,7 +94,7 @@ The reference tables should be created when the configuration is saved and the A
 
 ![Reference table logs](/docs/assets/reference-table-logs.png)
 
-To Verify the data in the reference table
+User can Verify the data in the reference table. The reference data table app can be downloaded and installed from https://exchange.xforce.ibmcloud.com/hub/extension/074f919060a2f2dea33e365fc0c5e039.
 
 ![Verify the data in the reference table](/docs/assets/reference-table-verify.png)
 
@@ -141,7 +141,7 @@ Step 4:- Verify the sighting in the EIQ application
 
 ![Lookup verify](/docs/assets/lookup-4.png)
 
-# 7. Custom Sighting Creation 
+# 7. Sighting Creation from offenses
 
 The following example creates an alert rule using ingested threat intelligence data in QRadar:
 
@@ -157,12 +157,19 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	* Click Selected reference table column > value > Submit.
 	* Click Select operator > Equals > Submit.
 	* Click Selected event property. For example: Destination IP
+5. More rules can be added to add filter. Locate when the event(s) were detected by one or more of these log sources.
+	* Assign values to place holders by clicking on the following underlined parameters:
+	Click these log sources > Select a log source and click 'Add' > Submit. This creates rule for matching when events are detected by one or more given log sources.
 5. Click Next.
 6. Select the checkbox for “Ensure the detected event is part of an offense”
 	* Select  ”Index offense based on” according to the fields on rule is created. For example if a rule is created for matching Destination IP select Destination IP. 
 	*”Annotate this offense” is optional. User can select and add annotations or text explaining the offense. 
 	*”Include detected events by Destination IP from this point forward, in the offense, for ” is also optional. User can mention time interval in seconds to include detected events in offense.
 7. Click Finish.
+8. User can go to Offenses > All Offenses and can View offenses with one of the selected      Option: 	All offsenses
+9. Right click on source > Create EclecticIQ Sighting
+10. User can Create Sighting by mentioning all the details and clicking on Create Sighting button. 
+
 
 ![](/docs/assets/sighting-1.png)
 
