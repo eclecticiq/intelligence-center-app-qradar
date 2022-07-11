@@ -94,7 +94,7 @@ The reference tables should be created when the configuration is saved and the A
 
 ![Reference table logs](/docs/assets/reference-table-logs.png)
 
-User can Verify the data in the reference table. The reference data table app can be downloaded and installed from https://exchange.xforce.ibmcloud.com/hub/extension/074f919060a2f2dea33e365fc0c5e039.
+User can Verify the data in the reference table. The Reference Data Management app can be downloaded and installed from https://exchange.xforce.ibmcloud.com/hub/extension/074f919060a2f2dea33e365fc0c5e039.
 
 ![Verify the data in the reference table](/docs/assets/reference-table-verify.png)
 
@@ -157,7 +157,7 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	* Click Selected reference table column > value > Submit.
 	* Click Select operator > Equals > Submit.
 	* Click Selected event property. For example: Destination IP
-5. More rules can be added to add filter. Locate when the event(s) were detected by one or more of these log sources.
+5. More rules can be added to filter the data. For example, Locate when the event(s) were detected by one or more of these log sources.
 	* Assign values to place holders by clicking on the following underlined parameters:
 	Click these log sources > Select a log source and click 'Add' > Submit. This creates rule for matching when events are detected by one or more given log sources.
 5. Click Next.
@@ -166,22 +166,21 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	*”Annotate this offense” is optional. User can select and add annotations or text explaining the offense. 
 	*”Include detected events by Destination IP from this point forward, in the offense, for ” is also optional. User can mention time interval in seconds to include detected events in offense.
 7. Click Finish.
-8. User can go to Offenses > All Offenses and can View offenses with one of the selected      Option: 	All offsenses
-9. Click on any offense.
-10. Right click on the IP address > Create EclecticIQ Sighting
-11. A pop-up window will appear to ask for the details below. 
+8. To create the sighting once the offense is created by rule,
+	1. User can go to Offenses > All Offenses and can View offenses with one of the selected      Option: 	All offsenses
+	2. Click on any offense.
+	3. Right click on the IP address > Create EclecticIQ Sighting
+	4. A pop-up window will appear to ask for the details below. 
 
-Clicking on save will create sightings in the EIQ platform with provided details.
+	Clicking on save will create sightings in the EIQ platform with provided details.
 
-* Sighting Value: Value which is clicked
-* Sighting type: Type of sighting. Possible values: ip, domain, url, email, hash
-* Sighting title: Title of sighting
-* Sighting description: Description of sighting
-* Sighting confidence: Confidence of sighting. Possible values: low, medium, high
-* Sighting tags delimited by a comma: Any tags to attach with sighting
+	* Sighting Value: Value which is clicked
+	* Sighting type: Type of sighting. Possible values: ip, domain, url, email, hash
+	* Sighting title: Title of sighting
+	* Sighting description: Description of sighting
+	* Sighting confidence: Confidence of sighting. Possible values: low, medium, high
+	* Sighting tags delimited by a comma: Any tags to attach with sighting
 
-Fill up necessary details.
-12. Click on Create sighting button.
 
 
 ![](/docs/assets/sighting-1.png)
