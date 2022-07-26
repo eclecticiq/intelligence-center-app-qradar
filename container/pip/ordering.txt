@@ -8,5 +8,7 @@ WTForms-3.0.0-py3-none-any.whl
 Flask_WTF-1.0.0-py3-none-any.whl
 SQLAlchemy-1.4.31-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 PyYAML-6.0-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl
+six-1.15.0-py2.py3-none-any.whl
+urllib3-1.26.11-py2.py3-none-any.whl
 APScheduler-3.6.3-py2.py3-none-any.whl
 pyscheduler-2.0.1-py2.py3-none-any.whl
