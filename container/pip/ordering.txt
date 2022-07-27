@@ -1,8 +1,11 @@
 chardet-3.0.4-py2.py3-none-any.whl
+pytz-2020.5-py2.py3-none-any.whl
 tzlocal-2.1-py2.py3-none-any.whl
 pycryptodome-3.9.6-cp36-cp36m-manylinux1_x86_64.whl
 funcsigs-1.0.2-py2.py3-none-any.whl
 greenlet-1.0.0-cp36-cp36m-manylinux2010_x86_64.whl
+requests-2.27.1-py2.py3-none-any.whl
+charset_normalizer-2.0.12-py3-none-any.whl
 sac_requests-1.1.0-py3-none-any.whl
 WTForms-3.0.0-py3-none-any.whl
 Flask_WTF-1.0.0-py3-none-any.whl
