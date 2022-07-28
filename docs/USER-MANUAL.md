@@ -160,16 +160,16 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	* Click Select operator > Equals > Submit.
 	* Click Selected event property. For example: Destination IP
 5. Filtering on network or logsource is strongly recommended, as otherwise the Rule can be slow. For example,To add the filter of logsource:
-	* Locate when the event(s) were detected by one or more of these log sources.
+	* Locate `when the event(s) were detected by one or more of these log sources`.
 	* Assign values to place holders by clicking on the following underlined parameters:
 	Click these log sources > Select a log source and click 'Add' > Submit. This creates rule for matching when events are detected by one or more given log sources.
-5. Click Next.
-6. Select the checkbox for “Ensure the detected event is part of an offense”
+6. Click Next.
+7. Select the checkbox for “Ensure the detected event is part of an offense”
 	* Select  ”Index offense based on” according to the fields on rule is created. For example if a rule is created for matching Destination IP select Destination IP. 
 	*”Annotate this offense” is optional. User can select and add annotations or text explaining the offense. 
 	*”Include detected events by Destination IP from this point forward, in the offense, for ” is also optional. User can mention time interval in seconds to include detected events in offense.
-7. Click Finish.
-8. To create the sighting once the offense is created by rule,
+8. Click Finish.
+9. To create the sighting once the offense is created by rule,
 	1. User can go to Offenses > All Offenses and can View offenses with one of the selected      Option: 	All offsenses
 	2. Click on any offense.
 	3. Right click on the IP address > Create EclecticIQ Sighting
