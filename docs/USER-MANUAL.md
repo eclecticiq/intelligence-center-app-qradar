@@ -143,6 +143,8 @@ Step 4:- Verify the sighting in the EIQ application
 
 # 7. Sighting Creation from offenses
 
+Note: Rules on reference sets over 20K in size can get slow.
+
 The following example creates an alert rule using ingested threat intelligence data in QRadar:
 
 This rule is connected to Destination IPs in log events and ingested IP related threat intelligence data.
@@ -157,7 +159,8 @@ This rule is connected to Destination IPs in log events and ingested IP related 
 	* Click Selected reference table column > value > Submit.
 	* Click Select operator > Equals > Submit.
 	* Click Selected event property. For example: Destination IP
-5. More rules can be added to filter the data. For example, Locate when the event(s) were detected by one or more of these log sources.
+5. Filtering on network or logsource is strongly recommended, as otherwise the Rule can be slow. For example,To add the filter of logsource:
+	* Locate when the event(s) were detected by one or more of these log sources.
 	* Assign values to place holders by clicking on the following underlined parameters:
 	Click these log sources > Select a log source and click 'Add' > Submit. This creates rule for matching when events are detected by one or more given log sources.
 5. Click Next.
