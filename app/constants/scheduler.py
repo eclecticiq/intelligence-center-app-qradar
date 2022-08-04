@@ -1,0 +1,29 @@
+"""Scheduler Constants."""
+SCHEDULER_PARENT_DIR = "app"
+SCHEDULER_CONFIG_DIR = "configs"
+SCHEDULER_CONFIG_FILE = "schedule.yaml"
+
+SCHEDULER_LOG = "apscheduler.scheduler"
+
+SCHEDULER_ID = "id"
+SCHEDULER_INTERVAL = "interval"
+SCHEDULER_TRIGGER = "trigger"
+SCHEDULER_SECONDS = "seconds"
+SCHEDULER_MINUTES = "minutes"
+SCHEDULER_ARGS = "args"
+
+SCHEDULER_LABEL_DEFAULT = "default"
+SCHEDULER_LABEL_TYPE = "type"
+SCHEDULER_LABEL_URL = "url"
+SCHEDULER_LABEL_MAX_WORKERS = "max_workers"
+SCHEDULER_LABEL_COALESCE = "coalesce"
+SCHEDULER_LABEL_MAX_INSTANCES = "max_instances"
+
+# Scheduler State
+SCHEDULER_STATE_START = "start"
+SCHEDULER_STATE_PAUSE = "pause"
+SCHEDULER_STATE_RESUME = "resume"
+SCHEDULER_STATE_SHUTDOWN = "shutdown"
+
+#
+COLLECT_OBSERVABLES_ID_JOB = "collect_obsrvables_id_job"

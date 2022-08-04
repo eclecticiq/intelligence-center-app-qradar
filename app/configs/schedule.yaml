@@ -1,0 +1,5 @@
+app.jobs.delete_observable_data.delete_data:
+  - trigger: interval
+  - every: 1440
+  - unit: minutes
+  - id: delete_observables_job
