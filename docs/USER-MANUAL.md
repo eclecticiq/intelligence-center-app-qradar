@@ -28,7 +28,7 @@ Configure the Outgoing Feeds by following the instructions in the [EclecticIQ In
 * Click on Continue
 * Click on Download
 
-(/docs/assets/install-1.png)
+(/docs/assets/1.png)
 
 #### Step 2. Navigate to QRadar App and select extension management
 
