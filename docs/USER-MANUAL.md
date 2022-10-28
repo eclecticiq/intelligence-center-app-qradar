@@ -22,7 +22,13 @@ Configure the Outgoing Feeds by following the instructions in the [EclecticIQ In
 
 #### Step 1. Download the QRadar App from XForce
 
-TODO
+* Go to the link [IBM X-Force Exchange/App Exchange](https://exchange.xforce.ibmcloud.com/hub/extension/3107d1fd9bbe8d3dfc07bd52b8b381fd)
+* Click on Log in
+* Enter valid credentials
+* Click on Continue
+* Click on Download
+
+(/docs/assets/install-1.png)
 
 #### Step 2. Navigate to QRadar App and select extension management
 
@@ -44,6 +50,7 @@ After the installation, the user will have to provide details below in the setup
 
 * Name (Required)
 * Host (Required): Host should be entered as `https://<hostname>/api/<version>`
+Example: `https://ic-playground.eclecticiq.com/api/v1`
 * API key (Required)
 * QRadar Security token (Required)
 
@@ -228,3 +235,4 @@ How to check the logs:
 2. Connect to the container of the EIQ application
 3. Go to opt/app-root/store/log
 4. Check startup.log or app.log
+
