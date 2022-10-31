@@ -4,7 +4,7 @@
 
 ## 1.1 Prerequisites
 
-1.QRadar On-prem version 7.4.3 Reference: [Qradar Installation Guide](https://www.ibm.com/docs/en/SS42VS_7.4/pdf/b_siem_inst.pdf). (Since 7.3.3 has reached EOL, therefore doc available for 7.4.3.)
+1. QRadar On-prem version 7.4.3 Reference: [Qradar Installation Guide](https://www.ibm.com/docs/en/SS42VS_7.4/pdf/b_siem_inst.pdf). (Since 7.3.3 has reached EOL, therefore doc available for 7.4.3.)
 2. EclecticIQ Intelligence Center 2.12 (or EclecticIQ Intelligence Center 2.11 with `eclecticiq-extension-api` Extension installed)
 3. Outgoing feeds should be set up on EclecticIQ Intelligence Center.
 4. API key generated from EclecticIQ Intelligence Center.
