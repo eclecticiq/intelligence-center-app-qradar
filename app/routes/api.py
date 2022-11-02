@@ -410,7 +410,6 @@ def lookup_observables():
     qpylib.log(LOOKUP_OBS_CALLED, level=LOG_LEVEL_INFO)
     eiq_api = EIQApi()
     response = eiq_api.lookup_observables(sighting_type, value)
-    final_data = []
     data = []
     if str(response.status_code).startswith(STR_TWO):
         data = json.loads(response.content)
@@ -418,9 +417,7 @@ def lookup_observables():
         for data_item in data:
             if data_item.get("entities"):
                 entity_data = get_entity_data(data_item, eiq_api)
-                final_data.append(entity_data)
-    final_data.append(value)
-    return render_template("lookup_observables.html", context=final_data)
+    return render_template("lookup_observables.html", context=entity_data)
 
 
 @eiq.route("/create_sighting", methods=["POST", "GET"])

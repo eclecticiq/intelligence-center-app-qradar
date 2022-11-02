@@ -1,5 +1,6 @@
 """Utils for Routes."""
 import datetime
+from qpylib import qpylib
 
 from app.constants.general import (
     C_LEVEL_UNKNOWN,
@@ -87,7 +88,7 @@ def get_entity_data(data_item, eiq_api):
     :return: prepared data to show on UI
     :rtype: dict
     """
-    entity_data_dict = {}
+    entity_data_dict = []
     for item in data_item.get("entities"):
         entity_data = eiq_api.fetch_entity_details(str(item.split("/")[-1]))
         observables = (
@@ -100,8 +101,8 @@ def get_entity_data(data_item, eiq_api):
             append_data = prepare_observable_data(obs_data)
 
             obs_data_list.append(append_data)
-
-        entity_data_dict.update(prepare_entity_data(entity_data, obs_data_list))
+        if entity_data:
+            entity_data_dict.append(prepare_entity_data(entity_data, obs_data_list))
     return entity_data_dict
 
 
