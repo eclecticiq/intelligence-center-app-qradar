@@ -16,13 +16,30 @@
 
 #### Step 1. Configure the outgoing feed(s) you wish to use with the QRadar App
 
-Configure the Outgoing Feeds by following the instructions in the [EclecticIQ Intelligence Center User Guide](https://docs.eclecticiq.com/).
+You can connect the QRadar App to one or more outgoing feeds in the Intelligence Center.
+
+When configuring an outgoing feed you should set the transport type to `EclecticIQ Entities CSV`.
+
+It is also important that the authenticated user (the user whose API key is being used in the add-on) has the correct permissions to access all the datasets used in the outgoing feed AND the workspaces that these data sets belong too.
+
+A common error seen is that a user does not have access to read either the datasets and/or the workspaces these datasets belong to for an outgoing feed configured in QRadar. An easy way to test permissions related issues is to use an API key of an Administrator user in the EclecticIQ Intelligence Center versus a non-Administrator. If the Administrator sees observables in QRadar, yet the other user does not, it is 99% likely permissions are incorrectly configured.
+
+## 1.3.1 Observable download behaviour
+
+The current application flow is:
+
+1. Download entities that belong to datasets (specified in feed)
+2. Get observables related to entities identified at step 1
+
+Currently the EclecticIQ v1 API does not support filtering of observables by dataset. This means that all observables linked to an entity in a datatset are currently downloaded by QRadar. 
+
+EclecticIQ is working on an update to support filtering of observables by dataset so that only observables belonginging to specific datasets are downloaded. You can track the implementation of this here: https://ideas.eclecticiq.com/ideas/IDEA-I-1159
 
 ### 1.2.2 QRadar 
 
 #### Step 1. Download the QRadar App from XForce
 
-TODO
+https://exchange.xforce.ibmcloud.com/hub/extension/3107d1fd9bbe8d3dfc07bd52b8b381fd
 
 #### Step 2. Navigate to QRadar App and select extension management
 
