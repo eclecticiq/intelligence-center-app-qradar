@@ -464,7 +464,7 @@ def create_sighting():
             config_data = read_data_store(DATA_STORE_DIR, DATA_STORE_FILE)
             content = EIQApi.get_response_content(response)
             context[STATUS_STRING] = VIEW_CREATED_SIGHTING.format(
-                config_data[HOST], content.get(DATA).get(ID)
+                config_data[HOST],config_data[VERSION],content.get(DATA).get(ID)
             )
         else:
             context[STATUS_STRING] = SIGHTING_NOT_CREATED.format(response.content)
