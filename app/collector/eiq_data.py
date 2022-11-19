@@ -212,6 +212,7 @@ class CustomAuth:
         self._sec_token = config[QRADAR_SECURITY_TOKEN]
         self._version = config[VERSION]
         self._auth_user = config[AUTH_USER]
+        self._verify_ssl = config["verify_ssl"]
 
     @property
     def host(self):
@@ -278,12 +279,26 @@ class CustomAuth:
     def auth_user(self, auth_user):
         self._auth_user = auth_user
 
+    @property
+    def verify_ssl(self):
+        """Get value for host.
+
+        :return: host
+        :rtype: str
+        """
+        return self._verify_ssl
+
+    @verify_ssl.setter
+    def host(self, verify_ssl):
+        self.verify_ssl = verify_ssl
+
     def get_eiq_request(self,configs=configs):
         """Get request object for eiq platform APIs.
 
         :return: request object
         :rtype: request
         """
+        qpylib.log(self._host)
         return Request(self._host, auth=BEARER_TOKEN, token=self._api_key, **configs)
 
     @staticmethod
@@ -354,11 +369,12 @@ class EIQApi:
             datetime.datetime.utcnow()
         )
         request = self.auth_config.get_eiq_request()
+        default_verify_ssl = self.auth_config.verify_ssl
         response = request.send(
             POST,
             endpoint=self.auth_config.version + EIQ_ENTITIES,
             data=json.dumps(sighting),
-            verify=DEFAULT_VERIFY_SSL,
+            verify=default_verify_ssl,
         )
         if str(response.status_code).startswith(STR_TWO):
             results = [
@@ -387,11 +403,12 @@ class EIQApi:
         """
         request = self.auth_config.get_eiq_request()
         param = {"filter[type]": obs_type, "filter[value]": value}
+        default_verify_ssl = self.auth_config.verify_ssl
         response = request.send(
             GET,
             endpoint=self.auth_config.version + EIQ_OBSERVABLES_BY_ID,
             params=param,
-            verify=DEFAULT_VERIFY_SSL,
+            verify=default_verify_ssl,
         )
         return response
 
@@ -407,7 +424,8 @@ class EIQApi:
 
         qpylib.log(ENDPOINT_CALLED.format(endpoint), level=LOG_LEVEL_INFO)
         request = self.auth_config.get_eiq_request()
-        response = request.send(GET, endpoint=endpoint)
+        default_verify_ssl = self.auth_config.verify_ssl
+        response = request.send(GET, endpoint=endpoint,verify=default_verify_ssl)
         if response.status_code not in [STATUS_CODE_200, STATUS_CODE_201]:
             qpylib.log(
                 RESPONSE_RECEIVED.format(response.status_code), level=LOG_LEVEL_INFO
@@ -430,7 +448,8 @@ class EIQApi:
 
         qpylib.log(ENDPOINT_CALLED.format(endpoint), level=LOG_LEVEL_INFO)
         request = self.auth_config.get_eiq_request()
-        response = request.send(GET, endpoint=endpoint)
+        default_verify_ssl = self.auth_config.verify_ssl
+        response = request.send(GET, endpoint=endpoint,verify=default_verify_ssl)
         if response.status_code not in [STATUS_CODE_200, STATUS_CODE_201]:
             qpylib.log(
                 RESPONSE_RECEIVED.format(response.status_code), level=LOG_LEVEL_INFO
@@ -449,11 +468,20 @@ class EIQApi:
         """
         qpylib.log(FETCH_OUTGOING_FEEDS, level=LOG_LEVEL_INFO)
         request = self.auth_config.get_eiq_request()
+        default_verify_ssl = self.auth_config.verify_ssl
+        endpoint=self.auth_config.version + EIQ_OUTGOING_FEEDS
+        
+        qpylib.log(endpoint)
+        qpylib.log(default_verify_ssl)
+        qpylib.log(type(default_verify_ssl))
+        
         response = request.send(
-            GET, endpoint=self.auth_config.version + EIQ_OUTGOING_FEEDS
+            GET, endpoint=self.auth_config.version + EIQ_OUTGOING_FEEDS,verify=True
         )
-
+        
+        # qpylib.log(response.content)
         content = EIQApi.get_response_content(response)
+        # qpylib.log(content)
         data = content.get(DATA)
         feeds_data = EIQApi.get_outgoing_feeds_ids_names(data)
         return feeds_data
@@ -510,9 +538,9 @@ class EIQApi:
         permissions_data = []
         qpylib.log(GETTING_PLATFORM_PERMISSIONS, level=LOG_LEVEL_INFO)
         request = self.auth_config.get_eiq_request()
-
+        default_verify_ssl = self.auth_config.verify_ssl
         response = request.send(
-            GET, endpoint=self.auth_config.version + EIQ_PERMISSIONS
+            GET, endpoint=self.auth_config.version + EIQ_PERMISSIONS,verify=default_verify_ssl
         )
         if response.status_code == STATUS_CODE_401:
             qpylib.log(REQUEST_UNAUTHORIZED, level=LOG_LEVEL_INFO)
@@ -545,7 +573,12 @@ class EIQApi:
         request = self.auth_config.get_eiq_request(configs=configs_user_permissions)
         endpoint = self.auth_config.version + EIQ_USER_PERMISSIONS + SLASH + SELF
         
-        response = request.send(GET, endpoint=endpoint, verify=DEFAULT_VERIFY_SSL)
+        configs[TIMEOUT]= DEFAULT_TIMEOUT
+        qpylib.log(configs)
+
+        default_verify_ssl = self.auth_config.verify_ssl
+        
+        response = request.send(GET, endpoint=endpoint, verify=default_verify_ssl)
 
         if response.status_code == STATUS_CODE_401:
             qpylib.log(REQUEST_UNAUTHORIZED, level=LOG_LEVEL_INFO)
@@ -761,6 +794,7 @@ class EIQApi:
         qpylib.log(GET_OBSERVABLE, level=LOG_LEVEL_INFO)
 
         request = self.auth_config.get_eiq_request()
+        default_verify_ssl = self.auth_config.verify_ssl
         counter = 1
         for observable_id in observable_ids:
             qpylib.log(
@@ -778,7 +812,7 @@ class EIQApi:
 
             qpylib.log(ENDPOINT_CALLED.format(endpoint), level=LOG_LEVEL_INFO)
 
-            response = request.send(GET, endpoint=endpoint)
+            response = request.send(GET, endpoint=endpoint,verify=default_verify_ssl)
             if response.status_code not in [STATUS_CODE_200, STATUS_CODE_201]:
                 qpylib.log(
                     RESPONSE_RECEIVED.format(response.status_code), level=LOG_LEVEL_INFO
@@ -820,11 +854,12 @@ class EIQApi:
         """
         observables = []
         new_checkpoint = None
+        default_verify_ssl = self.auth_config.verify_ssl
         while True:
             qpylib.log(SEND_REQUEST.format(parameters), level=LOG_LEVEL_INFO)
 
             response = request.send(
-                GET, endpoint=self.auth_config.version + EIQ_ENTITIES, params=parameters
+                GET, endpoint=self.auth_config.version + EIQ_ENTITIES, params=parameters,verify=default_verify_ssl
             )
 
             if response.status_code not in [STATUS_CODE_200, STATUS_CODE_201]:
@@ -931,9 +966,9 @@ class QradarApi:
 
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
-
+        default_verify_ssl = self.auth_config.verify_ssl
         response = request.send(
-            GET, endpoint=QRADAR_REFERENCE_TABLE, verify=DEFAULT_VERIFY_SSL, **headers
+            GET, endpoint=QRADAR_REFERENCE_TABLE, verify=default_verify_ssl, **headers
         )
         if response.status_code == STATUS_CODE_404:
             qpylib.log(GET_REFERENCE_TABLES_NOT_FOUND, level=LOG_LEVEL_ERROR)
@@ -1030,13 +1065,13 @@ class QradarApi:
                     level=LOG_LEVEL_INFO,
                 )
                 qpylib.log(URL_MSG.format(url))
-
+                default_verify_ssl = self.auth_config.verify_ssl
                 request = CustomAuth.get_qradar_request(url)
                 response = request.send(
                     POST,
                     endpoint=QRADAR_REFERENCE_TABLE,
                     params=params,
-                    verify=DEFAULT_VERIFY_SSL,
+                    verify=default_verify_ssl,
                     **headers,
                 )
 
@@ -1094,7 +1129,8 @@ class QradarApi:
 
         url = HTTPS + str(console_address)
         request = CustomAuth.get_qradar_request(url)
-        response = request.send(POST, endpoint=endpoint, data=jsn_str, **headers)
+        default_verify_ssl = self.auth_config.verify_ssl
+        response = request.send(POST, endpoint=endpoint,verify=default_verify_ssl, data=jsn_str, **headers)
 
         if response.status_code == STATUS_CODE_400:
             qpylib.log(
@@ -1147,12 +1183,12 @@ class QradarApi:
         console_address = qpylib.get_console_fqdn()
 
         url = HTTPS + str(console_address)
-
+        default_verify_ssl = self.auth_config.verify_ssl
         request = CustomAuth.get_qradar_request(url)
         response = request.send(
             GET,
             endpoint=QRADRAR_REFERENCE_DELETE_TASKS + SLASH + task_id,
-            verify=DEFAULT_VERIFY_SSL,
+            verify=default_verify_ssl,
             **headers,
         )
         if response.status_code == STATUS_CODE_404:
@@ -1201,12 +1237,12 @@ class QradarApi:
                 DELETING_TABLE.format(table_name),
                 level=LOG_LEVEL_INFO,
             )
-
+            default_verify_ssl = self.auth_config.verify_ssl
             request = CustomAuth.get_qradar_request(url)
             response = request.send(
                 DELETE,
                 endpoint=QRADAR_REFERENCE_TABLE + SLASH + table_name,
-                verify=DEFAULT_VERIFY_SSL,
+                verify=default_verify_ssl,
                 **headers,
             )
 
@@ -1295,9 +1331,10 @@ class QradarApi:
         headers = {HEADERS: {SEC_KEY: self.auth_config.sec_token}}
         console_address = qpylib.get_console_fqdn()
         url = HTTPS + str(console_address)
+        default_verify_ssl = self.auth_config.verify_ssl
         request = CustomAuth.get_qradar_request(url)
         response = request.send(
-            GET, endpoint=QRADAR_REFERENCE_TABLE, verify=DEFAULT_VERIFY_SSL, **headers
+            GET, endpoint=QRADAR_REFERENCE_TABLE, verify=default_verify_ssl, **headers
         )
         if response.status_code == STATUS_CODE_422:
             qpylib.log(

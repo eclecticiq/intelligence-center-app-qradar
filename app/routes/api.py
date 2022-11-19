@@ -1,6 +1,7 @@
 """API views."""
 
 import datetime
+import os
 import json
 import re
 from app.checkpoint_store import remove_checkpoint
@@ -16,7 +17,7 @@ from app.routes.charts import (
     get_bar_graph_data_by_observable_type,
     get_pie_chart_data,
 )
-from app.routes.utils import get_entity_data, get_filters
+from app.routes.utils import get_entity_data, get_filters,get_unverified_cert
 from app.cipher import Cipher
 from app.collector.eiq_data import EIQApi, QradarApi
 from app.configs.datastore import DATA_STORE_DIR, DATA_STORE_FILE, DATA_STORE_SETUP_FILE
@@ -197,6 +198,22 @@ def save_configuration():
     config[VERSION]= version_split
 
     qpylib.log(type(config[HOST]))
+    
+    is_self_signed_cert = False
+    
+    if is_self_signed_cert: # this param should be read only in save
+        # get the certificate and save it in certs.
+        save_path = os.getcwd() + "/" + "store" + "/" + "certs"
+        if os.path.exists(save_path + "/"+"certfile.pem"):
+            verify_ssl = save_path + "/"+"certfile.pem"
+        else:
+            qpylib.log("Certificate not found in backend")
+            config[STATUS_STRING] = "Certificate not found in backend"
+            return render_template(HELLO_TEMPLATE, context=config)
+    else:
+        verify_ssl = True
+
+    config["verify_ssl"]= verify_ssl
 
     # Call to  api to check for authentication
     eiq_api = EIQApi(config)
@@ -213,6 +230,7 @@ def save_configuration():
         config[QRADAR_SECURITY_TOKEN] = Cipher(QRADAR_SECURITY_TOKEN, SHARED).encrypt(
             qradar_security_token
         )
+        qpylib.log(config)
         overwrite_data_store(config)
         config[API_KEY] = api_key
         config[QRADAR_SECURITY_TOKEN] = qradar_security_token
@@ -274,13 +292,18 @@ def test_connection():
     api_key = str(form.get(API_KEY)).strip()
     qradar_security_token = str(form.get(SECURITY_TOKEN)).strip()
 
+    # is_self_signed_cert = str(form.get("self_signed_cert")).strip() # if the user selects self signed cert upload the certificate in the backend manually
+    is_self_signed_cert = False # for testing , will be rempoved later
+    
     config = {
         AUTH_USER: auth_user,
         HOST: host,
         VERSION: "",
         API_KEY: api_key,
-        QRADAR_SECURITY_TOKEN: qradar_security_token,
+        QRADAR_SECURITY_TOKEN: qradar_security_token
     }
+    
+    
 
     if not host.startswith(HTTPS):
         qpylib.log(HOST_NAME_SHOULD_START_WITH)
@@ -299,6 +322,25 @@ def test_connection():
         
     config[HOST]= HTTPS+host_name
     config[VERSION]= version_split
+
+    if is_self_signed_cert:
+        # get the certificate and save it in certs.
+        cwd = os.getcwd() # /opt/app-root
+        save_path = cwd + "/" + "store" + "/" + "certs"
+        if not os.path.exists(save_path):
+            os.mkdir(save_path)
+        get_unverified_cert(host_name,443,save_path)
+        if os.path.exists(save_path + "/"+"certfile.pem"):
+            verify_ssl = save_path + "/"+"certfile.pem"
+        else:
+            qpylib.log("Failed to download the certificate")
+            config[STATUS_STRING] = "Failed to fetch the certificate"
+            return render_template(HELLO_TEMPLATE, context=config)
+    else:
+        verify_ssl = True
+
+    config["verify_ssl"]= verify_ssl
+    qpylib.log(config)
     
     eiq_api = EIQApi(config)
     missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
@@ -410,6 +452,8 @@ def lookup_observables():
     qpylib.log(LOOKUP_OBS_CALLED, level=LOG_LEVEL_INFO)
     eiq_api = EIQApi()
     response = eiq_api.lookup_observables(sighting_type, value)
+    qpylib.log(response.content)
+    final_data = []
     data = []
     if str(response.status_code).startswith(STR_TWO):
         data = json.loads(response.content)
@@ -417,6 +461,9 @@ def lookup_observables():
         for data_item in data:
             if data_item.get("entities"):
                 entity_data = get_entity_data(data_item, eiq_api)
+                # final_data.append(entity_data)
+    qpylib.log(entity_data)
+    final_data.append(value)
     return render_template("lookup_observables.html", context=entity_data)
 
 
@@ -460,8 +507,7 @@ def create_sighting():
         context[TYPE] = form_data[SIGHTING_TYPE]
         context[VALUE] = form_data[SIGHTING_VALUE]
         qpylib.log(str(response.status_code))
-        if str(response.status_code).startswith(STR_TWO):
-            
+        if str(response.status_code).startswith(STR_TWO):        
             content = EIQApi.get_response_content(response)
             context[STATUS_STRING] = VIEW_CREATED_SIGHTING.format(content.get(DATA).get(ID))
         else:

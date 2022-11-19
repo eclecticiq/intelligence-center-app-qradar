@@ -208,3 +208,6 @@ LAST_UPDATED_VALUE_NOT_FOUND = (
 HOST_NAME_SHOULD_START_WITH = "Host name should start with https://"
 URL_INVALID = "The given URL is invalid."
 CONNECTION_ERROR = "Connection Timeout : {}"
+
+
+FETCH_CERTIFICATES = "Fetching certificates from {}:{}"

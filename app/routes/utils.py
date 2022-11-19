@@ -1,6 +1,11 @@
 """Utils for Routes."""
 import datetime
 from qpylib import qpylib
+import requests
+import socket
+
+from OpenSSL import SSL
+from cryptography.hazmat.primitives import serialization
 
 from app.constants.general import (
     C_LEVEL_UNKNOWN,
@@ -154,3 +159,38 @@ def get_filters(i_type, c_level, time):
     filters[SELECT_TYPE] = select_type
     filters[SELECT_LEVEL] = select_level
     return filters
+
+
+def get_unverified_cert(host, port, pem_path):
+
+    qpylib.log(f"Fetching certificates from {host}:{port}".format(host).format(port))
+    try:
+        context = SSL.Context(SSL.TLS_METHOD)
+        context.set_cipher_list('ALL:@SECLEVEL=0'.encode('utf-8'))
+
+        conn = SSL.Connection(context, socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+        conn.set_tlsext_host_name(host.encode())
+        conn.settimeout(5)
+        conn.connect((host, port))
+        conn.setblocking(1)
+        conn.do_handshake()
+        
+        for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
+            qpylib.log(f'{idx} subject: {cert.get_subject()}')
+            qpylib.log(f'  issuer: {cert.get_issuer()})')
+            qpylib.log(f'  fingerprint: {cert.digest("sha1")}')
+
+        conn.close()
+
+        # save the cert chain as a pem file
+        with open(pem_path+"/"+"certfile.pem", 'ba') as f:
+            f.truncate(0)
+            for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
+                qpylib.log(f"writing cert {idx} to {pem_path}")
+                pem_bytes = cert.to_cryptography().public_bytes(serialization.Encoding.PEM)
+                f.write(pem_bytes)
+                f.write(b"\n")
+    except Exception as error:
+        qpylib.log("Error occured: {} ".format(error))
+
+
