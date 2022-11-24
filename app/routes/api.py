@@ -169,7 +169,7 @@ def save_configuration():
     host = str(form.get(HOST)).strip()
     api_key = str(form.get(API_KEY)).strip()
     qradar_security_token = str(form.get(SECURITY_TOKEN)).strip()
-
+    
 
     config = {
         AUTH_USER: auth_user,
@@ -198,9 +198,8 @@ def save_configuration():
     config[VERSION]= version_split
 
     qpylib.log(type(config[HOST]))
-    
-    is_self_signed_cert = False
-    
+    is_self_signed_cert = True if str(form.get("is_self_signed_cert")).strip() == "on" else False
+    config["is_self_signed_cert"]= is_self_signed_cert
     if is_self_signed_cert: # this param should be read only in save
         # get the certificate and save it in certs.
         save_path = os.getcwd() + "/" + "store" + "/" + "certs"
@@ -262,6 +261,7 @@ def get_configuration():
             AUTH_USER: config_data.get(AUTH_USER),
             HOST: config_data.get(HOST),
             VERSION: config_data.get(VERSION),
+            "is_self_signed_cert": config_data.get("is_self_signed_cert")
         }
     if setup_data:
         response.update(
@@ -286,21 +286,22 @@ def test_connection():
     """
     qpylib.log(TEST_CONNECTION, level=LOG_LEVEL_INFO)
     form = request.form
-
+    qpylib.log(request.form)
     auth_user = str(form.get(NAME)).strip()
     host = str(form.get(HOST)).strip()
     api_key = str(form.get(API_KEY)).strip()
     qradar_security_token = str(form.get(SECURITY_TOKEN)).strip()
 
-    # is_self_signed_cert = str(form.get("self_signed_cert")).strip() # if the user selects self signed cert upload the certificate in the backend manually
-    is_self_signed_cert = False # for testing , will be rempoved later
+    is_self_signed_cert = True if str(form.get("is_self_signed_cert")).strip() == "on" else False  # if the user selects self signed cert upload the certificate in the backend manually
+    # is_self_signed_cert = False # for testing , will be rempoved later
     
     config = {
         AUTH_USER: auth_user,
         HOST: host,
         VERSION: "",
         API_KEY: api_key,
-        QRADAR_SECURITY_TOKEN: qradar_security_token
+        QRADAR_SECURITY_TOKEN: qradar_security_token,
+        "is_self_signed_cert": is_self_signed_cert
     }
     
     
@@ -340,7 +341,6 @@ def test_connection():
         verify_ssl = True
 
     config["verify_ssl"]= verify_ssl
-    qpylib.log(config)
     
     eiq_api = EIQApi(config)
     missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
@@ -666,3 +666,4 @@ def get_chart_data():
     chart_data[BAR_CHART2] = bar_chart2
 
     return render_template("dashboard.html", context=chart_data)
+    

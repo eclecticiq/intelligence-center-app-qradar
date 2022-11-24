@@ -42,6 +42,8 @@
     		<dt>Qradar Security Token *</dt>
             <dd><input  value="{{context.qradar_security_token}}" class="textinput" type="password" size="50"  id="security_token" placeholder="Qradar Security token" name="security_token" form="configure-form" autocomplete="off" required readonly></dd>
             <br />
+            <dd><input type="checkbox" id="is_self_signed_cert" class="hellocheckbox" name="is_self_signed_cert" form="configure-form"> Use self signed certificate</dd>
+            <br />
              <div id="test_connection" class="lds-dual-ring hidden overlay"></div>
             <div id="connection_message"></div>
             <br />
@@ -69,6 +71,8 @@
     		<dt>Qradar Security Token *</dt>
             <dd><input  value="{{context.qradar_security_token}}" class="textinput" type="password" size="50"  id="security_token" placeholder="Qradar Security token" name="security_token" form="configure-form" autocomplete="off" required></dd>
             <br />
+            <dd><input type="checkbox" id="is_self_signed_cert" class="hellocheckbox" name="is_self_signed_cert" form="configure-form" > Use self signed certificate</dd>
+            <br />
              <div id="test_connection" class="lds-dual-ring hidden overlay"></div>
             <div id="connection_message"></div>
             <br />
@@ -93,6 +97,9 @@
              <script src="./static/js/lib/jquery.dataTables.min.js"></script>
              <script src="./static/js/lib/jquery.slimscroll.js"></script>
        <script>
+       $('#is_self_signed').is(':checked'){
+           $("#self_signed_cert").show();
+       }
         $("#configure-form").submit(function (){
                     $("#loading").show();
                 })
@@ -110,7 +117,10 @@
                         {
                          $('#host').val(outgoingFeedData.host+'/'+outgoingFeedData.version)
                         }
-
+                        console.log(outgoingFeedData.is_self_signed_cert)
+                        if (outgoingFeedData.is_self_signed_cert != undefined && outgoingFeedData.is_self_signed_cert != '' && outgoingFeedData.is_self_signed_cert==true){
+                            $('#is_self_signed').check()
+                        }
                     });
                     });
             });
