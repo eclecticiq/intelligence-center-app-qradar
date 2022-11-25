@@ -102,6 +102,15 @@ from app.constants.messages import (
     URL_INVALID,
     USER_UNAUTHORIZED,
     VIEW_CREATED_SIGHTING,
+    REQUEST_UNAUTHORIZED,
+    MISSING_PERMISSIONS,
+    REQUEST_DOES_NOT_EXIST,
+    INTERNAL_SERVER_ERROR,
+    BAD_REQUEST,
+    BAD_REQUEST_CHECK_LOGS,
+    INCORRECT_QRADAR_SEC_TOKEN
+
+
 )
 from app.constants.scheduler import SCHEDULER_INTERVAL
 from app.datastore import (
@@ -221,10 +230,27 @@ def save_configuration():
     qradar_api = QradarApi(config)
     qradar_api_response = qradar_api.get_reference_tables()
 
-    if eiq_api_status_code not in [200, 201] or qradar_api_response not in [200, 201]:
-        config[STATUS_STRING] = USER_UNAUTHORIZED
+    if eiq_api_status_code == 401:
+        qpylib.log(REQUEST_UNAUTHORIZED, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = REQUEST_UNAUTHORIZED
+    elif eiq_api_status_code == 403:
+        qpylib.log(MISSING_PERMISSIONS, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = MISSING_PERMISSIONS
+    elif eiq_api_status_code == 404:
+        qpylib.log(REQUEST_DOES_NOT_EXIST, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = REQUEST_DOES_NOT_EXIST
+    elif eiq_api_status_code == 500:
+        qpylib.log(INTERNAL_SERVER_ERROR, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = INTERNAL_SERVER_ERROR
+    elif eiq_api_status_code == 400:
+        qpylib.log(BAD_REQUEST, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] =  BAD_REQUEST_CHECK_LOGS
+        
+    elif qradar_api_response not in [200,201]:
+        qpylib.log(INCORRECT_QRADAR_SEC_TOKEN, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = INCORRECT_QRADAR_SEC_TOKEN
 
-    elif not missing_permissions and qradar_api_response == STATUS_CODE_200:
+    elif not missing_permissions and qradar_api_response == STATUS_CODE_200 and eiq_api_status_code== STATUS_CODE_200:
         config[API_KEY] = Cipher(API_KEY, SHARED).encrypt(api_key)
         config[QRADAR_SECURITY_TOKEN] = Cipher(QRADAR_SECURITY_TOKEN, SHARED).encrypt(
             qradar_security_token
@@ -344,13 +370,35 @@ def test_connection():
     
     eiq_api = EIQApi(config)
     missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
-
+    qpylib.log(eiq_api_status_code)
+    qpylib.log(type(eiq_api_status_code))
+    
     qradar_api = QradarApi(config)
     qradar_api_response = qradar_api.get_reference_tables()
 
-    if eiq_api_status_code not in [200, 201] or qradar_api_response not in [200, 201]:
-        config[STATUS_STRING] = USER_UNAUTHORIZED
-    elif not missing_permissions and qradar_api_response == STATUS_CODE_200:
+    if eiq_api_status_code == 401:
+        qpylib.log(REQUEST_UNAUTHORIZED, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = REQUEST_UNAUTHORIZED
+    elif eiq_api_status_code == 403:
+        qpylib.log(MISSING_PERMISSIONS, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = MISSING_PERMISSIONS
+    elif eiq_api_status_code == 404:
+        qpylib.log(REQUEST_DOES_NOT_EXIST, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = REQUEST_DOES_NOT_EXIST
+        qpylib.log(INTERNAL_SERVER_ERROR, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = INTERNAL_SERVER_ERROR
+    elif eiq_api_status_code == 400:
+        qpylib.log(BAD_REQUEST, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] =  BAD_REQUEST_CHECK_LOGS
+        
+    elif qradar_api_response not in [200,201]:
+        qpylib.log(INCORRECT_QRADAR_SEC_TOKEN, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = INCORRECT_QRADAR_SEC_TOKEN
+        
+
+    #  eiq_api_status_code not in [200, 201] or qradar_api_response not in [200, 201]:
+    #     config[STATUS_STRING] = USER_UNAUTHORIZED
+    elif not missing_permissions and qradar_api_response== STATUS_CODE_200 and eiq_api_status_code== STATUS_CODE_200:
         config[STATUS_STRING] = TEST_CONNECTION_SUCCESSFULL
     else:
         qpylib.log(MISSING_PERMISSIONS.format(missing_permissions))

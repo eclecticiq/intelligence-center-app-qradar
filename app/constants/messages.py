@@ -107,8 +107,8 @@ SUCCESSFULLY_FETCHED_REFERENCE_TABLES = "Successfully fetched reference tables"
 
 MISSING_PERMISSIONS = "User missing required permissions : {}"
 GETTING_PLATFORM_PERMISSIONS = "Getting platform Permissions !"
-REQUEST_UNAUTHORIZED = "Unauthrized request !"
-USER_MISSING_PERMISSIONS = "Missing Permissions !"
+REQUEST_UNAUTHORIZED = "Error 401 !Unauthorized request ."
+USER_MISSING_PERMISSIONS = "Error 403 !Missing Permissions ."
 ERROR_OCCURED_IN_PLATFORM_PERMISSIONS = (
     "Error occured in fetching platform permissions , Status Code :{} and content : {}"
 )
@@ -117,7 +117,11 @@ SUCCESSFULLY_FETCHED_PLATFORM_PERMISSIONS = (
 )
 
 GETTING_USER_PERMISSIONS = "Getting User Permissions !"
-REQUEST_DOES_NOT_EXIST = "Request does not exist !"
+REQUEST_DOES_NOT_EXIST = "Error 404 !Request does not exist ."
+INTERNAL_SERVER_ERROR = "Error 500 !Internal Server error occured."
+BAD_REQUEST = "Error 400 !Bad Request. "
+BAD_REQUEST_CHECK_LOGS = "Error 400 !Bad Request.Check console logs ."
+INCORRECT_QRADAR_SEC_TOKEN = "Incorrect Qradar sec token."
 ERROR_IN_USER_PERMISSIONS = (
     "Error occured in fetching user permissions , Status Code :{} and content : {}"
 )
