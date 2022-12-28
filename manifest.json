@@ -35,7 +35,7 @@
       "text": "Create EclecticIQ sighting"
     }
   ],
-  "image": "qradar-app-base:2.1.6",
+  "image": "qradar-app-base:2.1.8",
   "name": "EclecticIQ",
   "page_scripts": [
     {
@@ -101,6 +101,6 @@
       "url": "/test_connection"
     }
   ],
-  "uuid": "0c82169f-7630-458c-b4d7-636c2621494d",
+  "uuid": "0a3da627-c38c-4aec-8fe6-88ea6ea41f6f",
   "version": "2.0.0"
 }

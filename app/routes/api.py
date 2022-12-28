@@ -17,7 +17,7 @@ from app.routes.charts import (
     get_bar_graph_data_by_observable_type,
     get_pie_chart_data,
 )
-from app.routes.utils import get_entity_data, get_filters,get_unverified_cert
+from app.routes.utils import get_entity_data, get_filters, get_unverified_cert
 from app.cipher import Cipher
 from app.collector.eiq_data import EIQApi, QradarApi
 from app.configs.datastore import DATA_STORE_DIR, DATA_STORE_FILE, DATA_STORE_SETUP_FILE
@@ -110,7 +110,6 @@ from app.constants.messages import (
     BAD_REQUEST_CHECK_LOGS,
     INCORRECT_QRADAR_SEC_TOKEN
 
-
 )
 from app.constants.scheduler import SCHEDULER_INTERVAL
 from app.datastore import (
@@ -178,7 +177,6 @@ def save_configuration():
     host = str(form.get(HOST)).strip()
     api_key = str(form.get(API_KEY)).strip()
     qradar_security_token = str(form.get(SECURITY_TOKEN)).strip()
-    
 
     config = {
         AUTH_USER: auth_user,
@@ -191,7 +189,7 @@ def save_configuration():
     if not host.startswith(HTTPS):
         qpylib.log(HOST_NAME_SHOULD_START_WITH)
         config[STATUS_STRING] = HOST_NAME_SHOULD_START_WITH
-        return render_template(HELLO_TEMPLATE, context=config) 
+        return render_template(HELLO_TEMPLATE, context=config)
 
     url_split = host.split(HTTPS)
     url_split = url_split[1]
@@ -201,19 +199,19 @@ def save_configuration():
     else:
         qpylib.log(URL_INVALID)
         config[STATUS_STRING] = URL_INVALID
-        return render_template(HELLO_TEMPLATE, context=config) 
-        
-    config[HOST]= HTTPS +host_name
-    config[VERSION]= version_split
+        return render_template(HELLO_TEMPLATE, context=config)
+
+    config[HOST] = HTTPS + host_name
+    config[VERSION] = version_split
 
     qpylib.log(type(config[HOST]))
     is_self_signed_cert = True if str(form.get("is_self_signed_cert")).strip() == "on" else False
-    config["is_self_signed_cert"]= is_self_signed_cert
-    if is_self_signed_cert: # this param should be read only in save
+    config["is_self_signed_cert"] = is_self_signed_cert
+    if is_self_signed_cert:  # this param should be read only in save
         # get the certificate and save it in certs.
         save_path = os.getcwd() + "/" + "store" + "/" + "certs"
-        if os.path.exists(save_path + "/"+"certfile.pem"):
-            verify_ssl = save_path + "/"+"certfile.pem"
+        if os.path.exists(save_path + "/" + "certfile.pem"):
+            verify_ssl = save_path + "/" + "certfile.pem"
         else:
             qpylib.log("Certificate not found in backend")
             config[STATUS_STRING] = "Certificate not found in backend"
@@ -221,7 +219,7 @@ def save_configuration():
     else:
         verify_ssl = True
 
-    config["verify_ssl"]= verify_ssl
+    config["verify_ssl"] = verify_ssl
 
     # Call to  api to check for authentication
     eiq_api = EIQApi(config)
@@ -244,13 +242,13 @@ def save_configuration():
         config[STATUS_STRING] = INTERNAL_SERVER_ERROR
     elif eiq_api_status_code == 400:
         qpylib.log(BAD_REQUEST, level=LOG_LEVEL_INFO)
-        config[STATUS_STRING] =  BAD_REQUEST_CHECK_LOGS
-        
-    elif qradar_api_response not in [200,201]:
+        config[STATUS_STRING] = BAD_REQUEST_CHECK_LOGS
+
+    elif qradar_api_response not in [200, 201]:
         qpylib.log(INCORRECT_QRADAR_SEC_TOKEN, level=LOG_LEVEL_INFO)
         config[STATUS_STRING] = INCORRECT_QRADAR_SEC_TOKEN
 
-    elif not missing_permissions and qradar_api_response == STATUS_CODE_200 and eiq_api_status_code== STATUS_CODE_200:
+    elif not missing_permissions and qradar_api_response == STATUS_CODE_200 and eiq_api_status_code == STATUS_CODE_200:
         config[API_KEY] = Cipher(API_KEY, SHARED).encrypt(api_key)
         config[QRADAR_SECURITY_TOKEN] = Cipher(QRADAR_SECURITY_TOKEN, SHARED).encrypt(
             qradar_security_token
@@ -301,7 +299,12 @@ def get_configuration():
         )
 
     return jsonify(response), STATUS_CODE_200
-
+    
+    
+def refresh_certs():
+    qpylib.log("Executing Refresh certs.... 1")
+    os.system('sudo /opt/app-root/bin/update_ca_bundle.sh')
+    qpylib.log("Executing Refresh certs.... 2")
 
 @eiq.route("/test_connection", methods=["POST"])
 def test_connection():
@@ -312,15 +315,16 @@ def test_connection():
     """
     qpylib.log(TEST_CONNECTION, level=LOG_LEVEL_INFO)
     form = request.form
-    qpylib.log(request.form)
+
     auth_user = str(form.get(NAME)).strip()
     host = str(form.get(HOST)).strip()
     api_key = str(form.get(API_KEY)).strip()
     qradar_security_token = str(form.get(SECURITY_TOKEN)).strip()
 
-    is_self_signed_cert = True if str(form.get("is_self_signed_cert")).strip() == "on" else False  # if the user selects self signed cert upload the certificate in the backend manually
+    is_self_signed_cert = True if str(form.get(
+        "is_self_signed_cert")).strip() == "on" else False  # if the user selects self signed cert upload the certificate in the backend manually
     # is_self_signed_cert = False # for testing , will be rempoved later
-    
+
     config = {
         AUTH_USER: auth_user,
         HOST: host,
@@ -329,13 +333,11 @@ def test_connection():
         QRADAR_SECURITY_TOKEN: qradar_security_token,
         "is_self_signed_cert": is_self_signed_cert
     }
-    
-    
 
     if not host.startswith(HTTPS):
         qpylib.log(HOST_NAME_SHOULD_START_WITH)
         config[STATUS_STRING] = HOST_NAME_SHOULD_START_WITH
-        return render_template(HELLO_TEMPLATE, context=config) 
+        return render_template(HELLO_TEMPLATE, context=config)
 
     url_split = host.split(HTTPS)
     url_split = url_split[1]
@@ -345,65 +347,98 @@ def test_connection():
     else:
         qpylib.log(URL_INVALID)
         config[STATUS_STRING] = URL_INVALID
-        return render_template(HELLO_TEMPLATE, context=config) 
-        
-    config[HOST]= HTTPS+host_name
-    config[VERSION]= version_split
+        return render_template(HELLO_TEMPLATE, context=config)
+
+    config[HOST] = HTTPS + host_name
+    config[VERSION] = version_split
 
     if is_self_signed_cert:
         # get the certificate and save it in certs.
-        cwd = os.getcwd() # /opt/app-root
-        save_path = cwd + "/" + "store" + "/" + "certs"
+        cwd = os.getcwd()  # /opt/app-root
+
+        save_path = os.path.join(cwd, "store", "certs")
         if not os.path.exists(save_path):
             os.mkdir(save_path)
-        get_unverified_cert(host_name,443,save_path)
-        if os.path.exists(save_path + "/"+"certfile.pem"):
-            verify_ssl = save_path + "/"+"certfile.pem"
+        get_unverified_cert(host_name, 443, save_path)
+        # refresh_certs()
+        if os.path.exists(os.path.join(save_path, "certfile.pem")):
+            qpylib.log("Certificate file exists ")
+            refresh_certs()
+            verify_ssl = os.path.join(save_path, "certfile.pem")
         else:
             qpylib.log("Failed to download the certificate")
             config[STATUS_STRING] = "Failed to fetch the certificate"
             return render_template(HELLO_TEMPLATE, context=config)
     else:
         verify_ssl = True
-
-    config["verify_ssl"]= verify_ssl
     
-    eiq_api = EIQApi(config)
-    missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
-    qpylib.log(eiq_api_status_code)
-    qpylib.log(type(eiq_api_status_code))
-    
-    qradar_api = QradarApi(config)
-    qradar_api_response = qradar_api.get_reference_tables()
+    config["verify_ssl"] = verify_ssl
+    qpylib.log(config["verify_ssl"])
 
-    if eiq_api_status_code == 401:
-        qpylib.log(REQUEST_UNAUTHORIZED, level=LOG_LEVEL_INFO)
-        config[STATUS_STRING] = REQUEST_UNAUTHORIZED
-    elif eiq_api_status_code == 403:
-        qpylib.log(MISSING_PERMISSIONS, level=LOG_LEVEL_INFO)
-        config[STATUS_STRING] = MISSING_PERMISSIONS
-    elif eiq_api_status_code == 404:
-        qpylib.log(REQUEST_DOES_NOT_EXIST, level=LOG_LEVEL_INFO)
-        config[STATUS_STRING] = REQUEST_DOES_NOT_EXIST
-        qpylib.log(INTERNAL_SERVER_ERROR, level=LOG_LEVEL_INFO)
-        config[STATUS_STRING] = INTERNAL_SERVER_ERROR
-    elif eiq_api_status_code == 400:
-        qpylib.log(BAD_REQUEST, level=LOG_LEVEL_INFO)
-        config[STATUS_STRING] =  BAD_REQUEST_CHECK_LOGS
+
+    
+    import requests
+    
+    url = "https://52.57.66.139/api/users/self"
+    
+    payload = {}
+    headers = {
+        'Authorization': 'Bearer 6fe26e904ebe417f1efd0425e806438aa1dcd1d7601d9dd6edb80d233dcbceee'
+    }
+    qpylib.log(config["verify_ssl"])
+    try:
+        response = requests.request("GET", url, headers=headers)
+        # response = requests.request("GET", url, headers=headers,verify="/opt/app-root/store/certs/52.57.66.139.crt")
+        # response = requests.request("GET", url, headers=headers,verify=False)
         
-    elif qradar_api_response not in [200,201]:
-        qpylib.log(INCORRECT_QRADAR_SEC_TOKEN, level=LOG_LEVEL_INFO)
-        config[STATUS_STRING] = INCORRECT_QRADAR_SEC_TOKEN
+        qpylib.log(response.status_code) 
+        qpylib.log(response.content)
         
+    except Exception as error:
+        config[STATUS_STRING] = error
+        qpylib.log(error,"exception")
+        return render_template(HELLO_TEMPLATE, context=config)
+
+    # response = qpylib.REST(rest_action='GET',
+    #                       request_url=url,
+    #                       headers=headers)
+    
+
+
+    # eiq_api = EIQApi(config)
+    # missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
+    # qpylib.log(eiq_api_status_code)
+    # qradar_api = QradarApi(config)
+    # qradar_api_response = qradar_api.get_reference_tables()
+
+    # if eiq_api_status_code == 401:
+    #     qpylib.log(REQUEST_UNAUTHORIZED, level=LOG_LEVEL_INFO)
+    #     config[STATUS_STRING] = REQUEST_UNAUTHORIZED
+    # elif eiq_api_status_code == 403:
+    #     qpylib.log(MISSING_PERMISSIONS, level=LOG_LEVEL_INFO)
+    #     config[STATUS_STRING] = MISSING_PERMISSIONS
+    # elif eiq_api_status_code == 404:
+    #     qpylib.log(REQUEST_DOES_NOT_EXIST, level=LOG_LEVEL_INFO)
+    #     config[STATUS_STRING] = REQUEST_DOES_NOT_EXIST
+    #     qpylib.log(INTERNAL_SERVER_ERROR, level=LOG_LEVEL_INFO)
+    #     config[STATUS_STRING] = INTERNAL_SERVER_ERROR
+    # elif eiq_api_status_code == 400:
+    #     qpylib.log(BAD_REQUEST, level=LOG_LEVEL_INFO)
+    #     config[STATUS_STRING] = BAD_REQUEST_CHECK_LOGS
+
+    # elif qradar_api_response not in [200, 201]:
+    #     qpylib.log(INCORRECT_QRADAR_SEC_TOKEN, level=LOG_LEVEL_INFO)
+    #     config[STATUS_STRING] = INCORRECT_QRADAR_SEC_TOKEN
+
 
     #  eiq_api_status_code not in [200, 201] or qradar_api_response not in [200, 201]:
     #     config[STATUS_STRING] = USER_UNAUTHORIZED
-    elif not missing_permissions and qradar_api_response== STATUS_CODE_200 and eiq_api_status_code== STATUS_CODE_200:
-        config[STATUS_STRING] = TEST_CONNECTION_SUCCESSFULL
-    else:
-        qpylib.log(MISSING_PERMISSIONS.format(missing_permissions))
-        config[STATUS_STRING] = MISSING_PERMISSIONS.format(missing_permissions)
-    config[HOST] = host
+    # elif not missing_permissions and qradar_api_response == STATUS_CODE_200 and eiq_api_status_code == STATUS_CODE_200:
+    #     config[STATUS_STRING] = TEST_CONNECTION_SUCCESSFULL
+    # else:
+    #     qpylib.log(MISSING_PERMISSIONS.format(missing_permissions))
+    #     config[STATUS_STRING] = MISSING_PERMISSIONS.format(missing_permissions)
+    # config[HOST] = host
     return render_template(HELLO_TEMPLATE, context=config)
 
 
@@ -555,7 +590,7 @@ def create_sighting():
         context[TYPE] = form_data[SIGHTING_TYPE]
         context[VALUE] = form_data[SIGHTING_VALUE]
         qpylib.log(str(response.status_code))
-        if str(response.status_code).startswith(STR_TWO):        
+        if str(response.status_code).startswith(STR_TWO):
             content = EIQApi.get_response_content(response)
             context[STATUS_STRING] = VIEW_CREATED_SIGHTING.format(content.get(DATA).get(ID))
         else:
@@ -714,4 +749,4 @@ def get_chart_data():
     chart_data[BAR_CHART2] = bar_chart2
 
     return render_template("dashboard.html", context=chart_data)
-    
+

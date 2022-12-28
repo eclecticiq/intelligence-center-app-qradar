@@ -139,19 +139,19 @@ def get_filters(i_type, c_level, time):
     if time.endswith("h"):
         start_time = int(
             (
-                datetime.datetime.now() - datetime.timedelta(hours=int(time[:-1]))
+                    datetime.datetime.now() - datetime.timedelta(hours=int(time[:-1]))
             ).timestamp()
         )
     elif time.endswith("d"):
         start_time = int(
             (
-                datetime.datetime.now() - datetime.timedelta(days=int(time[:-1]))
+                    datetime.datetime.now() - datetime.timedelta(days=int(time[:-1]))
             ).timestamp()
         )
     elif time.endswith("m"):
         start_time = int(
             (
-                datetime.datetime.now() - datetime.timedelta(minutes=int(time[:-1]))
+                    datetime.datetime.now() - datetime.timedelta(minutes=int(time[:-1]))
             ).timestamp()
         )
     filters[END_TIME] = int(datetime.datetime.now().timestamp())
@@ -162,8 +162,7 @@ def get_filters(i_type, c_level, time):
 
 
 def get_unverified_cert(host, port, pem_path):
-
-    qpylib.log(f"Fetching certificates from {host}:{port}".format(host).format(port))
+    qpylib.log("Fetching certificates from {}:{}".format(host, port))
     try:
         context = SSL.Context(SSL.TLS_METHOD)
         context.set_cipher_list('ALL:@SECLEVEL=0'.encode('utf-8'))
@@ -174,7 +173,7 @@ def get_unverified_cert(host, port, pem_path):
         conn.connect((host, port))
         conn.setblocking(1)
         conn.do_handshake()
-        
+
         for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
             qpylib.log(f'{idx} subject: {cert.get_subject()}')
             qpylib.log(f'  issuer: {cert.get_issuer()})')
@@ -183,7 +182,7 @@ def get_unverified_cert(host, port, pem_path):
         conn.close()
 
         # save the cert chain as a pem file
-        with open(pem_path+"/"+"certfile.pem", 'ba') as f:
+        with open(pem_path + "/" + "certfile.pem", 'ba') as f:
             f.truncate(0)
             for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
                 qpylib.log(f"writing cert {idx} to {pem_path}")
@@ -192,5 +191,3 @@ def get_unverified_cert(host, port, pem_path):
                 f.write(b"\n")
     except Exception as error:
         qpylib.log("Error occured: {} ".format(error))
-
-
