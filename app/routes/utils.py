@@ -161,10 +161,18 @@ def get_filters(i_type, c_level, time):
     return filters
 
 
+def verify_cert(cert, hostname):
+    status = cert.get_subject().get_components()[0][1].decode("utf-8") != "localhost"
+    if status:
+        status = cert.get_subject().get_components()[0][1].decode("utf-8") == hostname
+
+    return status
+
+
 def get_unverified_cert(host, port, pem_path):
     qpylib.log("Fetching certificates from {}:{}".format(host, port))
     try:
-        context = SSL.Context(SSL.TLS_METHOD)
+        context = SSL.Context(SSL.TLSv1_2_METHOD)
         context.set_cipher_list('ALL:@SECLEVEL=0'.encode('utf-8'))
 
         conn = SSL.Connection(context, socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM))

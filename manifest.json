@@ -1,4 +1,9 @@
 {
+  "name": "EclecticIQ",
+  "description": "EclecticIQ app",
+  "version": "2.0.0",
+  "uuid": "0c82169f-7630-458c-b4d7-636c2621494e",
+  "image": "qradar-app-base:2.1.6",
   "areas": [
     {
       "description": "EclecticIQ app",
@@ -10,7 +15,6 @@
       "url": "index"
     }
   ],
-  "description": "EclecticIQ app",
   "gui_actions": [
     {
       "description": "Lookup EclecticIQ for Observable",
@@ -35,8 +39,6 @@
       "text": "Create EclecticIQ sighting"
     }
   ],
-  "image": "qradar-app-base:2.1.8",
-  "name": "EclecticIQ",
   "page_scripts": [
     {
       "app_name": "*",
@@ -100,7 +102,5 @@
       ],
       "url": "/test_connection"
     }
-  ],
-  "uuid": "0a3da627-c38c-4aec-8fe6-88ea6ea41f6f",
-  "version": "2.0.0"
+  ]
 }
