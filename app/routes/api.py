@@ -379,7 +379,7 @@ def test_connection():
     
     import requests
     
-    url = "https://52.57.66.139/api/users/self"
+    url = "https://52.57.66.139/api/v2/users/self"
     
     payload = {}
     headers = {
