@@ -3,7 +3,7 @@
   "description": "EclecticIQ app",
   "version": "2.0.0",
   "uuid": "0c82169f-7630-458c-b4d7-636c2621494e",
-  "image": "qradar-app-base:2.1.6",
+  "image": "qradar-app-base:2.1.8",
   "areas": [
     {
       "description": "EclecticIQ app",

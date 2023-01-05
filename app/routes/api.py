@@ -385,7 +385,7 @@ def test_connection():
     headers = {
         'Authorization': 'Bearer 6fe26e904ebe417f1efd0425e806438aa1dcd1d7601d9dd6edb80d233dcbceee'
     }
-    qpylib.log(config["verify_ssl"])
+
     try:
         response = requests.request("GET", url, headers=headers)
         # response = requests.request("GET", url, headers=headers,verify="/opt/app-root/store/certs/52.57.66.139.crt")
