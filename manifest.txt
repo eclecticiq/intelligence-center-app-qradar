@@ -4,7 +4,7 @@
 		"extension_manifest": {
 			"locale": {
 				"en-US": {
-					"extension.name": "Threat Intelligence EclecticIQ Platform App QRadar v7.3.3FP6+",
+					"extension.name": "Threat Intelligence EclecticIQ Platform App QRadar v7.5.0",
 					"extension.short.description": "EclecticIQ App for QRadar",
 					"extension.long.description": "The EclecticIQ Platform acquires cyber threat data in different formats from multiple sources. It de-duplicates, normalizes, and enriches source data with additional contextual details and feeds the relevant information to QRadar.\n\nWith this app you can ingest data from the EclecticIQ Platform to QRadar and put it into reference tables. The app also contains custom actions to send back sightings into the EclecticIQ Platform for automatic dissemination and analyst review.\n\nThe app enables you to lookup information in the EclecticIQ Platform from QRadar and create Sightings from the UI."
 				}

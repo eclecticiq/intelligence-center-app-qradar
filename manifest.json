@@ -35,7 +35,7 @@
       "text": "Create EclecticIQ sighting"
     }
   ],
-  "image": "qradar-app-base:2.1.6",
+  "image": "qradar-app-base:2.1.8",
   "name": "EclecticIQ",
   "page_scripts": [
     {

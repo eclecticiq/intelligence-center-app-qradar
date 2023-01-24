@@ -21,7 +21,7 @@
             <h3 class="error-msg" >{{context.status}}</h3>
      </div>
      {% endif %}
- <form action="./save" method="POST" class="config" id="configure-form">
+ <form action="./save" method="POST" class="config" id="configure-form" enctype="multipart/form-data">
      <div class="logoContainer">
     <img class="logo" src="static/images/EiqLogo.png" alt="EclecticIQ logo" width="200" height="50">
     </div>
@@ -42,9 +42,9 @@
     		<dt>Qradar Security Token *</dt>
             <dd><input  value="{{context.qradar_security_token}}" class="textinput" type="password" size="50"  id="security_token" placeholder="Qradar Security token" name="security_token" form="configure-form" autocomplete="off" required readonly></dd>
             <br />
-            <dd><input type="checkbox" id="is_self_signed_cert" class="hellocheckbox" name="is_self_signed_cert" form="configure-form"> Use self signed certificate</dd>
+            <dd><input type="checkbox" id="is_self_signed_cert" class="hellocheckbox" name="is_self_signed_cert" form="configure-form" onclick="return false;"> Use self signed certificate</dd>
             <br />
-             <div id="test_connection" class="lds-dual-ring hidden overlay"></div>
+            <div id="test_connection" class="lds-dual-ring hidden overlay"></div>
             <div id="connection_message"></div>
             <br />
             <dd class="sumbitButton"  >
@@ -72,6 +72,8 @@
             <dd><input  value="{{context.qradar_security_token}}" class="textinput" type="password" size="50"  id="security_token" placeholder="Qradar Security token" name="security_token" form="configure-form" autocomplete="off" required></dd>
             <br />
             <dd><input type="checkbox" id="is_self_signed_cert" class="hellocheckbox" name="is_self_signed_cert" form="configure-form" > Use self signed certificate</dd>
+            <br/>
+            <dd><input value="{{context.certificate_file}}" type="file" id="certificate_file" name="certificate_file" form="configure-form" hidden disabled></dd>
             <br />
              <div id="test_connection" class="lds-dual-ring hidden overlay"></div>
             <div id="connection_message"></div>
@@ -97,9 +99,24 @@
              <script src="./static/js/lib/jquery.dataTables.min.js"></script>
              <script src="./static/js/lib/jquery.slimscroll.js"></script>
        <script>
-       $('#is_self_signed').is(':checked'){
-           $("#self_signed_cert").show();
-       }
+
+        $(document).ready(function() {
+            console.log("Inside ready function");
+            $('#is_self_signed_cert').change(function() {
+                if(this.checked) {
+                    console.log("if block is called");
+                    $('#certificate_file').prop('disabled', false);
+                    $('#certificate_file').prop('hidden', false);
+                } else {
+                    console.log("else block is called");
+                    $('#certificate_file').prop('disabled', true);
+                    $('#certificate_file').prop('hidden', true);
+                    $('#certificate_file').val('');
+                }
+            });
+
+
+        });
         $("#configure-form").submit(function (){
                     $("#loading").show();
                 })
@@ -108,6 +125,7 @@
             {
                 $(function(){
                     $.getJSON('./get', function(data) {
+                        console.log('Hello', JSON.stringify(data))
                         var outgoingFeedData=data;
                         if (outgoingFeedData.auth_user != undefined && outgoingFeedData.auth_user != '')
                         {
@@ -117,13 +135,13 @@
                         {
                          $('#host').val(outgoingFeedData.host+'/'+outgoingFeedData.version)
                         }
-                        console.log(outgoingFeedData.is_self_signed_cert)
-                        if (outgoingFeedData.is_self_signed_cert != undefined && outgoingFeedData.is_self_signed_cert != '' && outgoingFeedData.is_self_signed_cert==true){
-                            $('#is_self_signed').check()
-                        }
                     });
                     });
             });
             {% endif %}
+            {% if context.is_self_signed_cert == True %}
+            $('#is_self_signed_cert').prop('checked', true);
+            {% endif %}
+
         </script>
     {% endblock %}

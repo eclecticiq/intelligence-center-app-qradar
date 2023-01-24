@@ -1,11 +1,13 @@
 """Utils for Routes."""
 import datetime
-from qpylib import qpylib
-import requests
-import socket
-
-from OpenSSL import SSL
-from cryptography.hazmat.primitives import serialization
+# import os.path
+#
+# from qpylib import qpylib
+# import requests
+# import socket
+#
+# from OpenSSL import SSL
+# from cryptography.hazmat.primitives import serialization
 
 from app.constants.general import (
     C_LEVEL_UNKNOWN,
@@ -21,8 +23,9 @@ from app.constants.general import (
     SELECT_LEVEL,
     SELECT_TYPE,
     START_TIME,
-    URI,
+    URI, LOG_LEVEL_DEBUG, CERT_FILE, LOG_LEVEL_INFO,
 )
+from app.constants.messages import FETCH_CERTIFICATES, WRITING_CERTIFICATE_PATH, ERROR_IN_FETCHING_CERTIFICATE
 
 
 def prepare_observable_data(data):
@@ -78,6 +81,11 @@ def prepare_entity_data(data, obs_data):
         new_data["threat_start_time"] = (
             data.get("meta").get("estimated_threat_start_time")
             if data.get("meta").get("estimated_threat_start_time")
+            else ""
+        )
+        new_data["tags"] = (
+            ",".join(data.get("meta").get("tags"))
+            if data.get("meta").get("tags")
             else ""
         )
     return new_data
@@ -139,19 +147,19 @@ def get_filters(i_type, c_level, time):
     if time.endswith("h"):
         start_time = int(
             (
-                datetime.datetime.now() - datetime.timedelta(hours=int(time[:-1]))
+                    datetime.datetime.now() - datetime.timedelta(hours=int(time[:-1]))
             ).timestamp()
         )
     elif time.endswith("d"):
         start_time = int(
             (
-                datetime.datetime.now() - datetime.timedelta(days=int(time[:-1]))
+                    datetime.datetime.now() - datetime.timedelta(days=int(time[:-1]))
             ).timestamp()
         )
     elif time.endswith("m"):
         start_time = int(
             (
-                datetime.datetime.now() - datetime.timedelta(minutes=int(time[:-1]))
+                    datetime.datetime.now() - datetime.timedelta(minutes=int(time[:-1]))
             ).timestamp()
         )
     filters[END_TIME] = int(datetime.datetime.now().timestamp())
@@ -160,37 +168,35 @@ def get_filters(i_type, c_level, time):
     filters[SELECT_LEVEL] = select_level
     return filters
 
-
-def get_unverified_cert(host, port, pem_path):
-
-    qpylib.log(f"Fetching certificates from {host}:{port}".format(host).format(port))
-    try:
-        context = SSL.Context(SSL.TLS_METHOD)
-        context.set_cipher_list('ALL:@SECLEVEL=0'.encode('utf-8'))
-
-        conn = SSL.Connection(context, socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-        conn.set_tlsext_host_name(host.encode())
-        conn.settimeout(5)
-        conn.connect((host, port))
-        conn.setblocking(1)
-        conn.do_handshake()
-        
-        for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
-            qpylib.log(f'{idx} subject: {cert.get_subject()}')
-            qpylib.log(f'  issuer: {cert.get_issuer()})')
-            qpylib.log(f'  fingerprint: {cert.digest("sha1")}')
-
-        conn.close()
-
-        # save the cert chain as a pem file
-        with open(pem_path+"/"+"certfile.pem", 'ba') as f:
-            f.truncate(0)
-            for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
-                qpylib.log(f"writing cert {idx} to {pem_path}")
-                pem_bytes = cert.to_cryptography().public_bytes(serialization.Encoding.PEM)
-                f.write(pem_bytes)
-                f.write(b"\n")
-    except Exception as error:
-        qpylib.log("Error occured: {} ".format(error))
-
-
+#
+# def get_unverified_cert(host, port, pem_path):
+#     qpylib.log(FETCH_CERTIFICATES.format(host, port))
+#     try:
+#         context = SSL.Context(SSL.TLSv1_2_METHOD)
+#         context.set_cipher_list('ALL:@SECLEVEL=0'.encode('utf-8'))
+#
+#         conn = SSL.Connection(context, socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+#         conn.set_tlsext_host_name(host.encode())
+#         conn.settimeout(5)
+#         conn.connect((host, port))
+#         conn.setblocking(1)
+#         conn.do_handshake()
+#
+#         for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
+#             qpylib.log(f'{idx} subject: {cert.get_subject()}', level=LOG_LEVEL_DEBUG)
+#             qpylib.log(f'  issuer: {cert.get_issuer()})', level=LOG_LEVEL_DEBUG)
+#             qpylib.log(f'  fingerprint: {cert.digest("sha1")}', level=LOG_LEVEL_DEBUG)
+#
+#         conn.close()
+#
+#         # save the cert chain as a pem file
+#
+#         with open(os.path.join(pem_path, CERT_FILE), 'ba') as f:
+#             f.truncate(0)
+#             for (idx, cert) in enumerate(conn.get_peer_cert_chain()):
+#                 qpylib.log(WRITING_CERTIFICATE_PATH.format(idx, pem_path), level=LOG_LEVEL_INFO)
+#                 pem_bytes = cert.to_cryptography().public_bytes(serialization.Encoding.PEM)
+#                 f.write(pem_bytes)
+#                 f.write(b"\n")
+#     except Exception as error:
+#         qpylib.log(ERROR_IN_FETCHING_CERTIFICATE.format(error))

@@ -215,3 +215,7 @@ CONNECTION_ERROR = "Connection Timeout : {}"
 
 
 FETCH_CERTIFICATES = "Fetching certificates from {}:{}"
+FAILED_TO_FETCH_CERTIFICATE = "Failed to fetch the certificate"
+WRITING_CERTIFICATE_PATH = "Writing cert {} to {}"
+ERROR_IN_FETCHING_CERTIFICATE = "Error occurred in fetching the certificate: {} "
+EXECUTING_REFRESH_CERTS = "Executing refresh certs."

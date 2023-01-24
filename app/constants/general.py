@@ -42,7 +42,6 @@ GLUE_COLONS = ":::"
 EQUAL_TO = "="
 STR_ZERO = "0"
 
-
 STATUS_CODE = "status_code"
 STATUS_STRING = "status"
 MESSAGE_STRING = "message"
@@ -58,7 +57,6 @@ STATUS_CODE_201 = 201
 STATUS_CODE_202 = 202
 STATUS_CODE_422 = 422
 STATUS_CODE_409 = 409
-
 
 # constants for Log levels
 LOG_LEVEL_DEBUG = "debug"
@@ -98,7 +96,6 @@ VALUE = "value"
 RANGE = "RANGE"
 ITEMS = "items=0-2"
 
-
 NAME = "name"
 DATA = "data"
 COUNT = "count"
@@ -110,7 +107,6 @@ OBSERVABLE_TIME_TO_LIVE = "observable_time_to_live"
 SELF = "self"
 PERMISSIONS = "permissions"
 META = "meta"
-
 
 # OBSERVABLE TYPES
 TYPE = "type"
@@ -135,7 +131,6 @@ RANGE = "RANGE"
 HELLO_TEMPLATE = "hello.html"
 SETUP_TEMPLATE = "setup.html"
 
-
 # Configs
 TIMEOUT = "timeout"
 MAX_RETRY = "max_retry"
@@ -151,15 +146,12 @@ READ_OUTGOING_FEEDS = "read outgoing-feeds"
 READ_PERMSSIONS = "read permissions"
 TIME_MILLISECOND = 1000
 
-
 # Return
 MULTI_RESULTS = "Multi results"
-
 
 DESC_KEY = "description"
 VALUE_KEY = "value"
 SCRIPT_KEY = "script"
-
 
 # Sighting fields
 TITLE = "title"
@@ -193,7 +185,6 @@ SORTED_TIME = "sorted_time"
 PIE_CHART_MAX_LABELS = 7
 PIE_CHARTS_OTHERS = "Others"
 
-
 INDICATOR_TYPE = "indicator_type"
 CONFIDENCE_LEVEL = "confidence_Level"
 SEARCH_SIGHTING_COUNT_BY_CONFIDENCE = "SEARCH_SIGHTING_COUNT_BY_CONFIDENCE"
@@ -216,3 +207,12 @@ C_LEVEL_UNKNOWN = "unknown"
 LOW = "low"
 MEDIUM = "medium"
 HIGH = "high"
+
+# Certificates
+IS_SELF_SIGNED_CERT = "is_self_signed_cert"
+STORE = "store"
+CERTS = "certs"
+CERT_FILE = "certfile.pem"
+
+VERIFY_SSL = "verify_ssl"
+
