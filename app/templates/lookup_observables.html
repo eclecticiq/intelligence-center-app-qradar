@@ -44,12 +44,12 @@
                                     {% if context[0]|length > 0 %}
                                     {% for item in context%}
                                     <tr>
-                                         <td style="border: 1px solid #dddddd;">{{item.title}}</td>
-                                         <td style="border: 1px solid #dddddd;">{{item.description}}</td>
-                                         <td style="border: 1px solid #dddddd;">{{item.threat_start_time}}</td>
-                                         <td style="border: 1px solid #dddddd;">{{item.tags}}</td>
-                                         <td style="border: 1px solid #dddddd;">{{item.source_name}}</td>
-                                          <td style="border: 1px solid #dddddd;">
+                                         <td style="border: 1px solid #dddddd; vertical-align: initial;">{{item.title}}</td>
+                                         <td style="border: 1px solid #dddddd; word-break:break-all; vertical-align: initial;">{{item.description}}</td>
+                                         <td style="border: 1px solid #dddddd; vertical-align: initial;">{{item.threat_start_time}}</td>
+                                         <td style="border: 1px solid #dddddd; vertical-align: initial; word-break:break-all;">{{item.tags}}</td>
+                                         <td style="border: 1px solid #dddddd; vertical-align: initial;">{{item.source_name}}</td>
+                                          <td style="border: 1px solid #dddddd; vertical-align: initial">
                                           <table class="table table-striped tableChart"  style="width: 100%; color: black;  border: 1px solid #dddddd; height: 10px;" id="chart2">
                                               <thead>
                                                 <tr role="row" style="background-color: #42b598;">
@@ -71,15 +71,15 @@
                                                 <tbody id="observables">
                                                     {% for obs_data in item.observables %}
                                                     <tr>
-                                                        <td >
+                                                        <td>
                                                         {{obs_data.type}}
                                                         </td>
-                                                        <td >
+                                                        <td>
                                                             {{obs_data.value}}
                                                         </td>
 
                                                         <td>  {{item.confidence}}</td>
-                                                        <td style="width:50%">  <button type="button" onMouseOver="this.style.background-color='#42b598'" onMouseOut="this.style.background-color='#dddddd'" onclick="location.href = 'create_sighting?sighting_value={{ obs_data.value }}';" style="background-color:#42b598;color: #000;border:1px;border-radius:10px;padding:15px;position: relative; left: 10%;">Create Sighting</button></td>
+                                                        <td style="width:50%">  <button type="button" onMouseOver="this.style.background-color='#42b598'" onMouseOut="this.style.background-color='#dddddd'" onclick="location.href = 'create_sighting?sighting_value={{ obs_data.value }}';" style="background-color:#42b598;color: #000;border:1px;border-radius:10px;padding:15px;position: relative;">Create Sighting</button></td>
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>

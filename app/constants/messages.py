@@ -193,7 +193,7 @@ NO_OBSERVABLES_FOUND = (
 
 LOOKUP_OBS_CALLED = "Lookup Observables called"
 SIGHTING_CREATED = "Sighting created successfully."
-VIEW_CREATED_SIGHTING = "Sighting created! View: /entity/{}"
+VIEW_CREATED_SIGHTING = "Sighting created! View: {}/entity/{}"
 SIGHTING_NOT_CREATED = "Sighting could not be created. {}"
 
 DATA_OF_OUTGOING_FEED_DELETED_SUCCESSFULLY = (
@@ -219,3 +219,5 @@ FAILED_TO_FETCH_CERTIFICATE = "Failed to fetch the certificate"
 WRITING_CERTIFICATE_PATH = "Writing cert {} to {}"
 ERROR_IN_FETCHING_CERTIFICATE = "Error occurred in fetching the certificate: {} "
 EXECUTING_REFRESH_CERTS = "Executing refresh certs."
+NO_CERTIFICATE_FILE_IN_REQUEST = "No certificate file in upload request"
+FILE_FORMATS_ALLOWED = "Uploaded file should be of .crt or .pem format."

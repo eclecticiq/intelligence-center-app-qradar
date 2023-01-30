@@ -81,7 +81,7 @@ from app.constants.general import (
     TYPE,
     URI,
     VALUE,
-    VERSION, IS_SELF_SIGNED_CERT, STORE, CERTS, CERT_FILE, VERIFY_SSL,
+    VERSION, IS_SELF_SIGNED_CERT, STORE, CERTS, CERT_FILE, VERIFY_SSL, CERTIFICATE_FILE,
 )
 from app.constants.messages import (
     CHECKPOINT_REMOVED,
@@ -109,7 +109,8 @@ from app.constants.messages import (
     INTERNAL_SERVER_ERROR,
     BAD_REQUEST,
     BAD_REQUEST_CHECK_LOGS,
-    INCORRECT_QRADAR_SEC_TOKEN, FAILED_TO_FETCH_CERTIFICATE, EXECUTING_REFRESH_CERTS
+    INCORRECT_QRADAR_SEC_TOKEN, FAILED_TO_FETCH_CERTIFICATE, EXECUTING_REFRESH_CERTS, NO_CERTIFICATE_FILE_IN_REQUEST,
+    FILE_FORMATS_ALLOWED
 
 )
 from app.constants.scheduler import SCHEDULER_INTERVAL
@@ -207,28 +208,7 @@ def save_configuration():
 
     is_self_signed_cert = True if str(form.get(IS_SELF_SIGNED_CERT)).strip() == "on" else False
 
-    if is_self_signed_cert:
-        # get the certificate and save it in certs.
-        # cwd = os.getcwd()  # /opt/app-root
-
-        # save_path = os.path.join(cwd, STORE, CERTS)
-        # if not os.path.exists(save_path):
-        #     os.mkdir(save_path)
-        # get_unverified_cert(host_name, 443, save_path)
-
-        # if os.path.exists(os.path.join(save_path, CERT_FILE)):
-
-        #     refresh_certs()  # Importing the certificate to the trusted bundle
-            path_to_trusted_bundle = os.path.join("/etc", "pki", "ca-trust", "extracted", "openssl", "ca-bundle.trust"
-                                                                                                     ".crt")
-            verify_ssl = True
-        # else:
-        #     qpylib.log(FAILED_TO_FETCH_CERTIFICATE)
-        #     config[STATUS_STRING] = FAILED_TO_FETCH_CERTIFICATE
-        #     return render_template(HELLO_TEMPLATE, context=config)
-    else:
-        verify_ssl = True
-
+    verify_ssl = True  # This is valid for both the  self-signed certs and issued by third party auth
     config[VERIFY_SSL] = verify_ssl
 
     # Call to  api to check for authentication
@@ -317,6 +297,17 @@ def refresh_certs():
     os.system('sudo /opt/app-root/bin/update_ca_bundle.sh')
 
 
+def remove_existing_certs(cert):
+    """Removing the certs ."""
+    qpylib.log("Remove existing certs", level=LOG_LEVEL_INFO)
+    command_1 = f"rm -rf /etc/pki/ca-trust/source/anchors/{cert}"
+    command_2 = f"rm -rf /opt/app-root/store/certs/{cert}"
+
+    os.system(command_1)
+    os.system(command_2)
+    os.system('/bin/update-ca-trust -f')
+
+
 @eiq.route("/test_connection", methods=["POST"])
 def test_connection():
     """Test the connection to EIQ platform for  authorized users.
@@ -326,7 +317,6 @@ def test_connection():
     """
     qpylib.log(TEST_CONNECTION, level=LOG_LEVEL_INFO)
     form = request.form
-    qpylib.log(form)
 
     auth_user = str(form.get(NAME)).strip()
     host = str(form.get(HOST)).strip()
@@ -364,45 +354,51 @@ def test_connection():
     config[HOST] = HTTPS + host_name
     config[VERSION] = version_split
 
+    cwd = os.getcwd()  # /opt/app-root
+
+    save_path = os.path.join(cwd, STORE, CERTS)
+
+    if os.path.exists(save_path):
+        certs = os.listdir(save_path)
+        qpylib.log(certs)
+        for cert in certs:
+            remove_existing_certs(cert)  # Removing the certificates if present
+            refresh_certs()
+
     if is_self_signed_cert:
-        file = request.files['certificate_file']
-        qpylib.log(file)
+        file = request.files[CERTIFICATE_FILE]
         filename = secure_filename(file.filename)
 
+        if CERTIFICATE_FILE not in request.files or file.filename == '':
+            qpylib.log(NO_CERTIFICATE_FILE_IN_REQUEST)
+            config[STATUS_STRING] = NO_CERTIFICATE_FILE_IN_REQUEST
+            return render_template(HELLO_TEMPLATE, context=config)
+
         if not filename.lower().endswith(('.crt', '.pem')):
-            qpylib.log("File is not one of the following format .crt or .pem.")
-            config[STATUS_STRING] = "File should of .crt or .pem format.."
+            qpylib.log(FILE_FORMATS_ALLOWED)
+            config[STATUS_STRING] = FILE_FORMATS_ALLOWED
             return render_template(HELLO_TEMPLATE, context=config)
 
-        if 'certificate_file' not in request.files or file.filename == '':
-            qpylib.log('No certificate file in upload request')
-            config[STATUS_STRING] = "No certificate file in upload request"
-            return render_template(HELLO_TEMPLATE, context=config)
-
-        # get the certificate and save it in certs.
-        cwd = os.getcwd()  # /opt/app-root
-
-        save_path = os.path.join(cwd, STORE, CERTS)
         if not os.path.exists(save_path):
             os.mkdir(save_path)
-        # get_unverified_cert(host_name, 443, save_path)
-
         if os.path.exists(save_path):
+
             file.save(os.path.join(save_path, filename))
             refresh_certs()  # Importing the certificate to the trusted bundle
-            path_to_trusted_bundle = os.path.join("/etc", "pki", "ca-trust", "extracted", "openssl", "ca-bundle.trust"
-                                                                                                     ".crt")
-            # verify_ssl = path_to_trusted_bundle
-            # verify_ssl = os.path.join(save_path, filename)
-            verify_ssl = True
         else:
             qpylib.log(FAILED_TO_FETCH_CERTIFICATE)
             config[STATUS_STRING] = FAILED_TO_FETCH_CERTIFICATE
             return render_template(HELLO_TEMPLATE, context=config)
-    else:
-        verify_ssl = True
+
+    verify_ssl = True
 
     config[VERIFY_SSL] = verify_ssl
+
+    qpylib.log(host_name)
+    if re.match(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", host_name) and not is_self_signed_cert:
+        qpylib.log(NO_CERTIFICATE_FILE_IN_REQUEST, level=LOG_LEVEL_INFO)
+        config[STATUS_STRING] = NO_CERTIFICATE_FILE_IN_REQUEST
+        return render_template(HELLO_TEMPLATE, context=config)
 
     eiq_api = EIQApi(config)
     missing_permissions, eiq_api_status_code = eiq_api.validate_user_permissions()
@@ -590,7 +586,8 @@ def create_sighting():
 
         if str(response.status_code).startswith(STR_TWO):
             content = EIQApi.get_response_content(response)
-            context[STATUS_STRING] = VIEW_CREATED_SIGHTING.format(content.get(DATA).get(ID))
+            config_data = read_data_store(DATA_STORE_DIR, DATA_STORE_FILE)
+            context[STATUS_STRING] = VIEW_CREATED_SIGHTING.format(config_data[HOST], content.get(DATA).get(ID))
         else:
             context[STATUS_STRING] = SIGHTING_NOT_CREATED.format(response.content)
 

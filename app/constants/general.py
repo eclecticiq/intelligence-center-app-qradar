@@ -216,3 +216,5 @@ CERT_FILE = "certfile.pem"
 
 VERIFY_SSL = "verify_ssl"
 
+CERTIFICATE_FILE = 'certificate_file'
+

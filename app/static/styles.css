@@ -240,13 +240,13 @@ html {
     min-height: 400px;
 }
 
-.table-striped>tbody>tr:nth-child(2n+1)>td,
+.table-striped>tbody>tr:nth-child(n+1)>td,
 .table-striped>tbody>tr:nth-child(2n+1)>th {
     background-color:white;
     border: 1px solid #dddddd;
 }
 
-.table-striped>tbody>tr:nth-child(2n+1)>td,
+.table-striped>tbody>tr:nth-child(n+1)>td,
 .table-striped>tbody>tr:nth-child(2n)>th {
     background-color:white;
     border: 1px solid #dddddd;

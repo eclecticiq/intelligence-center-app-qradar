@@ -1,1 +1,2 @@
 /opt/app-root/container/run/import_certs.sh
+/opt/app-root/container/run/cert_perm.sh
