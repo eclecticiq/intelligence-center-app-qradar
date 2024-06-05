@@ -14,7 +14,7 @@ Features:
 
 - [Dashboards](#dashboard)
 - [Ingest observables from EclecticIQ Intelligence Center](#ingest-observables-from-eclecticiq-intelligence-center)
-- [Send sightings to EclecticIQ Intelligence Center](#send-sightings-to-eclecticiq-intelligence-center)
+- [Create sightings on EclecticIQ Intelligence Center](#create-sightings-on-eclecticiq-intelligence-center)
 - [Use Event Rules with data](#use-event-rules-with-data)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
@@ -52,11 +52,10 @@ Features:
 - An [authorized service token](https://www.ibm.com/docs/en/qradar-common?topic=configuration-creating-authorized-service-token)
   to use with the app
 - EclecticIQ Intelligence Center 2.14.0, 3.0.0 or newer,
-  configured with the following:
-  - One or more outgoing feeds on EclecticIQ Intelligence
-  Center. See [Configure EclecticIQ Intelligence Center](#configure-eclecticiq-intelligence-center).
-  - An EclecticIQ Intelligence Center user account. See
-    [Configure EclecticIQ Intelligence Center](#configure-eclecticiq-intelligence-center).
+  configured with the following.
+  See [Configure EclecticIQ Intelligence Center outgoing feeds](#configure-eclecticiq-intelligence-center-outgoing-feeds).:
+  - One or more outgoing feeds on EclecticIQ Intelligence Center.
+  - An EclecticIQ Intelligence Center user account.
   - EclecticIQ Intelligence Center API key
 
 ## Configure EclecticIQ Intelligence Center outgoing feeds
@@ -81,17 +80,21 @@ Each outgoing feed must have following configuration:
 > You must have at least one user account for QRadar to use
 > to authenticate with EclecticIQ Intelligence Center.
 > This user account:
+>
 > - Is used to generate an API key.
 >   This API key is used by the app below.
+>
 > - Is a member of at least one of the
 >   **Authorized groups** configured above.
+>
 > - Must have these permissions:
 >
 >   - `read permissions`
->   - `read entities`
 >   - `modify entities`
 >   - `read extracts`
 >   - `read outgoing-feeds`
+>   - `read sources`
+>   - `read taxonomies`
 >
 > - Must have permissions to access:
 >
@@ -105,6 +108,7 @@ Each outgoing feed must have following configuration:
 Download the app
 from [IBM X-Force
 Exchange](https://exchange.xforce.ibmcloud.com):
+
 https://exchange.xforce.ibmcloud.com/hub/extension/3107d1fd9bbe8d3dfc07bd52b8b381fd
 
 ### Step 2. Navigate to the app and select Extension Management
@@ -190,7 +194,7 @@ The application provides 3 dashboards:
 ### Ingest observables from EclecticIQ Intelligence Center
 
 Once the application is configured
-(see [Configure the application](#configure-the-application)),
+(see [Configure the application](#configure-the-app)),
 it periodically performs a one-way sync
 to retrieve and ingest observables from the connected
 EclecticIQ Intelligence Center.
@@ -265,7 +269,7 @@ ingested IP related threat intelligence data.
       following underlined parameters:
     * Click Reference Table Key > eiq_data_ip > eiq_value >
       Submit. This creates a rule for IP address matching.
-    * Click Selected event properties > Source IP > ＋ >
+    * Click Selected event properties > Source IP > + >
       Submit.
     * Click Selected reference table column > value >
       Submit.
