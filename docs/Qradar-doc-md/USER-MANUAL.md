@@ -115,17 +115,17 @@ https://exchange.xforce.ibmcloud.com/hub/extension/3107d1fd9bbe8d3dfc07bd52b8b38
 
 ![Navigate to EclecticIQ Intelligence Center App for QRadar
 and select Extension
-Management](assets/install-QRadar-select-management.png)
+Management](assets/install-qradar-select-management.png)
 
 ### Step 3. Browse the file and install the app
 
 ![Browse the file and install the
-application](assets/install-QRadar-the-application.png)
+application](assets/install-qradar-the-application.png)
 
-### Step 4. App should be installed successfully
+### Step 4. App should be installed successfully and you can see configuration page
 
 ![Browse the file and install the
-application](assets/install-QRadar-success.png)
+application](assets/login.png)
 
 ## Configure the app
 
@@ -140,12 +140,16 @@ After the installation, configure the app.
     **NOTE:**
     All fields are required.
 
-    | Field name | Description |
-    |------------|-------------|
-    | Configuration name | Enter a name for this configuration. |
-    | EclecticIQ Host | Enter the API URL of your EclecticIQ Intelligence Center instance. E.g., `https://ic-playground.eclecticiq.com/api/v2` |
-    | EclecticIQ API key | Enter the API key used to authenticate with EclecticIQ Intelligence Center. |
+    | Field name | Description                                                                                                                                                                                                      |
+    |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
+    | Configuration name | Enter a name for this configuration.                                                                                                                                                                             |
+    | EclecticIQ Host | Enter the API URL of your EclecticIQ Intelligence Center instance. E.g., `https://ic-playground.eclecticiq.com/api/v2`                                                                                           |
+    | EclecticIQ API key | Enter the API key used to authenticate with EclecticIQ Intelligence Center.                                                                                                                                      |
     | QRadar Security token | Enter your QRadar [authorized service token](https://www.ibm.com/docs/en/qradar-common?topic=configuration-creating-authorized-service-token). This token must use the **Admin** user role and security profile. |
+    | Verify SSL | Check the box to enable SSL.                                                                                                                                                                                     |
+    | Proxy IP | Provide the Proxy IP if you want to configure the proxy |
+    | Proxy Username | Provide the Proxy user if you want to configure the proxy. | 
+    | Proxt Password | Provide the Proxy password if you want to configure the proxy. |
 
 1.  Select **Test connection** to test your configuration.
 1.  When the connection test is successful,
@@ -165,7 +169,7 @@ In this configuration view, set the following:
 |---------------|-------------|
 | Auth User | Default. Do not change. |
 | Select one or more outgoing feeds to ingest | Select at least one outgoing feed from the list. Only compatible outgoing feeds are displayed. See section 1.2.1. |
-| Select the interval to collect the observables (in seconds) | **Default:** `120`. Minimum is `60`. This application retrieves data from the selected outgoing feeds at this interval.
+| Select the interval to collect the observables (in seconds) | **Default:** `120`. Minimum is `60`. This application retrieves data from the selected outgoing feeds at this interval.|
 
 
 > **NOTE: Supported observables**
@@ -234,7 +238,7 @@ from records from the **Log Activity** tab in IBM QRadar.
 1.  In the window that appears, fill out these fields:
 
     | Field name | Description |
-    |------------|-------------|
+    |-----------| ------------ |
     | Sighting value | (Required) This is the value selected from **Log Activity**. An observable with this value is added to the resulting Sighting entity. |
     | Sighting type | (Required) Observable type. Possible values: `ip`, `domain`, `url`, `email`, `hash`. |
     | Sighting title | (Required) Title of resulting Sighting entity. |
