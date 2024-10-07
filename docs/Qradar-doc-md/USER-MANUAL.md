@@ -48,7 +48,7 @@ Features:
 
 ## Prerequisites
 
-- IBM QRadar (on-premises) version 7.4.1 FixPack 2 or newer
+- IBM QRadar (on-premises) version 7.5.0 Patch 3 or newer
 - An [authorized service token](https://www.ibm.com/docs/en/qradar-common?topic=configuration-creating-authorized-service-token)
   to use with the app
 - EclecticIQ Intelligence Center 2.14.0, 3.0.0 or newer,
@@ -147,9 +147,9 @@ After the installation, configure the app.
     | EclecticIQ API key | Enter the API key used to authenticate with EclecticIQ Intelligence Center.                                                                                                                                      |
     | QRadar Security token | Enter your QRadar [authorized service token](https://www.ibm.com/docs/en/qradar-common?topic=configuration-creating-authorized-service-token). This token must use the **Admin** user role and security profile. |
     | Verify SSL | Check the box to enable SSL.                                                                                                                                                                                     |
-    | Proxy IP | Provide the Proxy IP if you want to configure the proxy |
-    | Proxy Username | Provide the Proxy user if you want to configure the proxy. | 
-    | Proxt Password | Provide the Proxy password if you want to configure the proxy. |
+    | Proxy IP | Enter the Proxy IP to configured proxy. If a port is required, append it to the IP (e.g., 127.0.0.1 or 127.0.0.1:8000).                                                                                          |
+    | Proxy Username | Enter the Proxy Username (optional, only if required)..                                                                                                                                                          |
+    | Proxt Password | Enter the Proxy Password (optional, only if required)..                                                                                                                                                          |
 
 1.  Select **Test connection** to test your configuration.
 1.  When the connection test is successful,
